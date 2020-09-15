@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOGIN</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth/form.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+    <div class="row" id="form-container">
+        <div>
+            <h1>LOGIN.</h1>
+        </div>
+        <form class="col s6" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="id_username">Username</label>
+                    <input id="id_username" type="text" name="username" placeholder="Username/Email Address ...">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="id_password">Password</label>
+                    <input id="id_password" type="password" name="password" placeholder="password">
+                </div>
+            </div>
+            <div class="buttons">
+                <a href="{% url 'signup' %}">Not connected with us ??, Sign-up</a>
+                <button class="btn waves-effect waves-light" type="submit" name="action">LOGIN
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
