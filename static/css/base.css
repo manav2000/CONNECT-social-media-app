@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #18191A;
+}
+
+nav {
+    background-color: #242526 !important;
+}
+
+.brand-logo {
+    color: #26a69a !important;
+    text-shadow: rgba(0, 0, 0, 0.2);
+}
+
+.nav-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.nav__option_3 ul>li {
+    padding: 0 10px;
+}
+
+.nav__option_3 ul>li a:hover {
+    color: #26a69a !important;
+}
+
+.active {
+    color: #26a69a;
+}
+
+#dropdown1 {
+    min-width: 200px;
+    top: -60px;
+}

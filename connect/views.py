@@ -5,10 +5,15 @@ from django.contrib.auth import login, logout, authenticate
 
 from .forms import LoginForm, UserRegistrationForm
 
+from profiles.models import Profile
+
 
 @login_required
 def home_view(request):
-    return render(request, 'base.html', {})
+    user_profile = Profile.objects.get(user=request.user)
+    return render(request, 'base.html', {
+        'user_profile': user_profile
+    })
 
 
 def user_login(request):

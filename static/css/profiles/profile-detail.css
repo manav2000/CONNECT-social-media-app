@@ -1,0 +1,64 @@
+.avatar {
+    height: 200px;
+    width: 200px;
+    background-size: cover;
+    margin: 20px 10px;
+    border-radius: 50%;
+}
+
+.overview {
+    color: rgba(255, 255, 255, 0.8);
+    width: 80%;
+}
+
+.row__1,
+.row__2,
+.row__3 {
+    display: flex;
+}
+
+.row__1 {
+    flex-direction: row;
+}
+
+.row__1>button {
+    margin-top: 25px;
+    margin-left: 50px;
+}
+
+.row__2 {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 0px;
+}
+
+.row__3 {
+    flex-direction: column;
+}
+
+#tabs-swipe-demo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background: transparent !important;
+}
+
+.indicator {
+    background-color: #26a69a !important;
+}
+
+#tabs-swipe-demo>li a {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.tab .active {
+    color: #26a69a !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.divider {
+    height: 1.5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    margin: 2px 0px;
+}
