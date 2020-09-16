@@ -21,12 +21,16 @@
             <div class="overview">
                 <div class="row__1">
                     <h4>{{ user_profile.user.username }}</h4>
-                    <button class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></button>
+                    {% if user_profile != auth_user_profile %}
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Follow</button>
+                    {% else %}
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></button>
+                    {% endif %}
                 </div>
                 <div class="row__2">
                     <p>0 posts</p>
-                    <p>{{ followers }} followers</p>
-                    <p>{{ followings }} following</p>
+                    <a class="modal-trigger" data-target="modal1">{{ total_followers }} followers</a>
+                    <a class="modal-trigger" data-target="modal2">{{ total_followings }} following</a>
                 </div>
                 <div class="row__3">
                     <p>{{user_profile.first_name}} {{user_profile.last_name}}</p>
@@ -35,6 +39,80 @@
             </div>
         </div>
     </div>
+    <!--START OF FOLLOWERS MODEL-->
+        <div id="modal1" class="modal modal-fixed-footer" style="border-radius: 30px; width: 500px">
+            <div class="modal-content">
+                <div class="fol__header">
+                    <h4>Followers</h4>
+                </div>
+                <div>
+                    {% for follower in followers %}
+                        <div class="fol__detail">
+                            <a href="{% url 'profiles:profile-detail-view' follower.sender.slug %}">
+                                <div style="display: flex; align-items: center;">
+                                    {% if follower.sender.avatar %}
+                                        <p class="fol__avatars" style="background-image:url({{follower.sender.avatar.url}})"></p>
+                                    {% else %}
+                                        <p class="fol__avatars" style="background-image:url({% static 'images/user.png' %})"></p>
+                                    {% endif %}
+                                    <p style="padding-left: 20px">{{follower.sender.user.username}}</p>
+                                </div>
+                            </a>
+                            <div>
+                                {% if auth_user_profile != follower.sender %}
+                                    {% if follower.sender in auth_user_following_profiles %}
+                                        <button class="btn">Following</button>
+                                    {% else %}
+                                        <button class="btn">Follow</button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+    <!--END OF FOLLOWERS MODEL-->
+    <!--START OF FOLLOWING MODEL-->
+        <div id="modal2" class="modal modal-fixed-footer" style="border-radius: 30px; width: 500px">
+            <div class="modal-content">
+                <div class="fol__header">
+                    <h4>Following</h4>
+                </div>
+                <div>
+                    {% for following in followings %}
+                        <div class="fol__detail">
+                            <a href="{% url 'profiles:profile-detail-view' following.receiver.slug %}">
+                                <div style="display: flex; align-items: center;">
+                                    {% if following.receiver.avatar %}
+                                        <p class="fol__avatars" style="background-image:url({{following.receiver.avatar.url}})"></p>
+                                    {% else %}
+                                        <p class="fol__avatars" style="background-image:url({% static 'images/user.png' %})"></p>
+                                    {% endif %}
+                                    <p>{{following.receiver.user.username}}</p>
+                                </div>
+                            </a>
+                            <div>
+                                {% if auth_user_profile != following.receiver %}
+                                    {% if following.receiver in auth_user_following_profiles %}
+                                        <button class="btn">Following</button>
+                                    {% else %}
+                                        <button class="btn">Follow</button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+    <!--END OF FOLLOWING MODEL-->
     <div>
         <div class="divider"></div>
         <ul id="tabs-swipe-demo" class="tabs">

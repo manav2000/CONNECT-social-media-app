@@ -32,6 +32,11 @@
     padding: 20px 0px;
 }
 
+.row__2>a {
+    color: rgba(255, 255, 255, 0.8) !important;
+    cursor: pointer;
+}
+
 .row__3 {
     flex-direction: column;
 }
@@ -61,4 +66,29 @@
     background-color: rgba(255, 255, 255, 0.2);
     width: 100%;
     margin: 2px 0px;
+}
+
+.fol__header {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1.5px solid black;
+    margin-bottom: 10px;
+}
+
+.fol__detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+
+.fol__detail a {
+    color: black;
+}
+
+.fol__avatars {
+    height: 30px;
+    width: 30px;
+    background-size: cover;
+    border-radius: 50%;
 }
