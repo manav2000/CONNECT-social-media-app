@@ -11,18 +11,13 @@ from profiles.models import Profile, Relationship
 
 @login_required
 def home_view(request):
-    total_notifications = Relationship.objects.get_all_follow_requests(
-        request.user).count()
-    return render(request, 'base.html', {
-        'total_notifications': total_notifications
-    })
+    return render(request, 'base.html', {})
 
 
 @login_required
 def notifications(request):
     follow_requests = Relationship.objects.get_all_follow_requests(
         request.user)
-    print(follow_requests)
     return render(request, 'notifications.html', {
         'follow_requests': follow_requests
     })

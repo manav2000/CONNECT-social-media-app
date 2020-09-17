@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
 from .models import Profile, Relationship
+from .forms import ProfileUpdateForm
 
 # Create your views here.
 
@@ -48,6 +49,25 @@ def user_profile_detail_view(request, slug):
         'auth_user_following_profiles': auth_user_following_profiles,
         'auth_user_follower_profiles': auth_user_follower_profiles,
         'my_request_profiles': my_request_profiles
+    })
+
+
+@login_required
+def edit_profile_details(request, slug):
+    profile = get_object_or_404(Profile, slug=slug)
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST or None,
+                                 request.FILES or None,
+                                 instance=profile)
+        if form.is_valid:
+            form.save()
+            return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': slug}))
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    return render(request, 'profiles/edit.html', {
+        'form': form
     })
 
 

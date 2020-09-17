@@ -34,9 +34,9 @@
             </div>
             <div class="nav__option_3">
                 <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
-                    <li><a href="" class="active"><i class="fas fa-home-alt"></i></a></li>
+                    <li><a href="{% url 'home' %}" class="active"><i class="fas fa-home-alt"></i></a></li>
                     <li><a href=""><i class="fas fa-location-arrow"></i></a></li>
-                    <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i>{{total_notifications}}</a></li>
+                    <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
                     <!-- Dropdown Trigger -->
                     {% if user_profile.avatar %}
                         <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><p class="avatar" style="background-image:url({{user_profile.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;"></p></a></li>
@@ -64,6 +64,9 @@
         $(document).ready(function(){
             $('.modal').modal();
         });
+
+        $('#textarea1').val('New Text');
+        M.textareaAutoResize($('#textarea1'));
     </script>
 </body>
 </html>

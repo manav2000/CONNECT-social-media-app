@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block head_css_site %}
+    <link rel="stylesheet" href="{% static 'css/profiles/edit.css' %}">
+{% endblock head_css_site %}
+
+{% block body_profile %}
+
+<div style="display:flex; flex-direction:row ;justify-content: center; width: 100%;">
+    <div class="edit-form" style="color:white; width: 50%;">
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button style="margin-top: 10px;" class="btn" type="submit">Update</button>
+        </form>
+    </div>
+</div>
+
+{% endblock body_profile %}

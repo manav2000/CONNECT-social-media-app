@@ -32,7 +32,7 @@
                     {% elif auth_user_profile not in follower_profiles and curr_user_profile in auth_user_follower_profiles %}
                         <a href="{% url 'profiles:user-follow' curr_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Follow Back</a>
                     {% elif auth_user_profile == curr_user_profile %}
-                        <a class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></a>
+                        <a href="{% url 'profiles:edit-profile' auth_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></a>
                     {% endif %}
                 </div>
                 <div class="row__2">
