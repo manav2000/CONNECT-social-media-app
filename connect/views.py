@@ -2,17 +2,29 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 
 from .forms import LoginForm, UserRegistrationForm
 
-from profiles.models import Profile
+from profiles.models import Profile, Relationship
 
 
 @login_required
 def home_view(request):
-    user_profile = Profile.objects.get(user=request.user)
+    total_notifications = Relationship.objects.get_all_follow_requests(
+        request.user).count()
     return render(request, 'base.html', {
-        'user_profile': user_profile
+        'total_notifications': total_notifications
+    })
+
+
+@login_required
+def notifications(request):
+    follow_requests = Relationship.objects.get_all_follow_requests(
+        request.user)
+    print(follow_requests)
+    return render(request, 'notifications.html', {
+        'follow_requests': follow_requests
     })
 
 

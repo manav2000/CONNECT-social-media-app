@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CONNECT</title>
     {% load static %}
-    {% block css %} {% block head_css_site %} {% endblock head_css_site %} {% endblock css %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block css %} {% block head_css_site %} {% endblock head_css_site %} {% endblock css %}
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 <body>
-    <ul id="dropdown1" class="dropdown-content">
+    {% if request.user.is_authenticated %}
+        <ul id="dropdown1" class="dropdown-content">
         <li><a href="{% url 'profiles:profile-detail-view' user_profile.slug %}"><i class="fas fa-user-circle"></i>  Profile</a></li>
         <li class="divider"></li>
         <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>  Logout</a></li>
@@ -32,16 +33,21 @@
                 </form>
             </div>
             <div class="nav__option_3">
-                <ul class="right hide-on-med-and-down">
+                <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
                     <li><a href="" class="active"><i class="fas fa-home-alt"></i></a></li>
                     <li><a href=""><i class="fas fa-location-arrow"></i></a></li>
-                    <li><a href=""><i class="fas fa-bell"></i></a></li>
+                    <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i>{{total_notifications}}</a></li>
                     <!-- Dropdown Trigger -->
-                    <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="fas fa-user-circle"></i></a></li>
+                    {% if user_profile.avatar %}
+                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><p class="avatar" style="background-image:url({{user_profile.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;"></p></a></li>
+                    {% else %}
+                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="fas fa-user-circle"></i></a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+    {% endif %}
 
     {% block body_profile %}
     {% endblock body_profile %}

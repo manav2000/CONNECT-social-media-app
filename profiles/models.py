@@ -62,6 +62,10 @@ class RelationshipManager(models.Manager):
         p = Profile.objects.get(user=receiver)
         return Relationship.objects.filter(receiver=p, status='send')
 
+    def get_all_request_by_me(self, me):
+        p = Profile.objects.get(user=me)
+        return Relationship.objects.filter(sender=p, status='send')
+
     def get_all_followers(self, receiver):
         p = Profile.objects.get(user=receiver)
         return Relationship.objects.filter(receiver=p, status='accepted')

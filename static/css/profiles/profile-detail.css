@@ -11,19 +11,9 @@
     width: 80%;
 }
 
-.row__1,
 .row__2,
 .row__3 {
     display: flex;
-}
-
-.row__1 {
-    flex-direction: row;
-}
-
-.row__1>button {
-    margin-top: 25px;
-    margin-left: 50px;
 }
 
 .row__2 {

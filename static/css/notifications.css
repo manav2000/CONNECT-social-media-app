@@ -1,0 +1,16 @@
+.noti__avatar {
+    height: 30px;
+    width: 30px;
+    background-size: cover;
+    border-radius: 50%;
+}
+
+.noti__detail {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}

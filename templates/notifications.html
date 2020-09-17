@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head_css_site %}
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock head_css_site %}
+
+{% block body_profile %}
+    <div class="container">
+        <div class="row" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+            <h4 style="color:white">Notifications</h4>
+        </div>
+        <div class="row noti">
+            {% for follow_request in follow_requests %}
+                <div class="noti__detail">
+                    <div style="display:flex; flex-direction: row; align-items:center">
+                        {% if follow_request.sender.avatar %}
+                            <div class="noti__avatar" style="background-image:url({{follow_request.sender.avatar.url}})"></div>
+                        {% else %}
+                            <div class="noti__avatar" style="background-image:url({% static 'images/user.png' %})"></div>
+                        {% endif %}
+                        <p style="margin-left:20px" class="noti__text"><span style="color:#26a69a">{{follow_request.sender.user.username}}</span> sent you friend request </p>
+                    </div>
+                    <div style="display:flex; flex-direction: row; align-items:center">
+                        <a href="{% url 'profiles:confirm-request' follow_request.sender.slug %}" class="btn">Confirm</a>
+                        <a href="{% url 'profiles:delete-request' follow_request.sender.slug %}" class="btn" style="margin-left:20px;">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body_profile %}
