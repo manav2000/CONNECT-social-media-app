@@ -59,20 +59,20 @@ STATUS_CHOICES = (
 
 class RelationshipManager(models.Manager):
     def get_all_follow_requests(self, receiver):
-        p = Profile.objects.get(user=receiver)
-        return Relationship.objects.filter(receiver=p, status='send')
+        # p = Profile.objects.get(user=receiver)
+        return Relationship.objects.filter(receiver=receiver, status='send')
 
     def get_all_request_by_me(self, me):
-        p = Profile.objects.get(user=me)
-        return Relationship.objects.filter(sender=p, status='send')
+        # p = Profile.objects.get(user=me)
+        return Relationship.objects.filter(sender=me, status='send')
 
     def get_all_followers(self, receiver):
-        p = Profile.objects.get(user=receiver)
-        return Relationship.objects.filter(receiver=p, status='accepted')
+        # p = Profile.objects.get(user=receiver)
+        return Relationship.objects.filter(receiver=receiver, status='accepted')
 
     def get_all_following(self, sender):
-        p = Profile.objects.get(user=sender)
-        return Relationship.objects.filter(sender=p, status='accepted')
+        # p = Profile.objects.get(user=sender)
+        return Relationship.objects.filter(sender=sender, status='accepted')
 
 
 class Relationship(models.Model):

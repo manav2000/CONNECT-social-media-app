@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 
 from .models import Profile, Relationship
 from .forms import ProfileUpdateForm
@@ -14,9 +14,9 @@ def user_profile_detail_view(request, slug):
     auth_user_profile = Profile.objects.get(user=request.user)
 
     auth_user_following = Relationship.objects.get_all_following(
-        auth_user_profile.user)
+        auth_user_profile)
     auth_user_follower = Relationship.objects.get_all_followers(
-        auth_user_profile.user)
+        auth_user_profile)
 
     auth_user_following_profiles = [
         following.receiver for following in auth_user_following]
@@ -24,9 +24,9 @@ def user_profile_detail_view(request, slug):
         follower.sender for follower in auth_user_follower]
 
     followings = Relationship.objects.get_all_following(
-        curr_user_profile.user)
+        curr_user_profile)
     followers = Relationship.objects.get_all_followers(
-        curr_user_profile.user)
+        curr_user_profile)
 
     total_followings = followings.count()
     total_followers = followers.count()
@@ -35,7 +35,7 @@ def user_profile_detail_view(request, slug):
     follower_profiles = [follower.sender for follower in followers]
 
     requests_by_me = Relationship.objects.get_all_request_by_me(
-        me=request.user)
+        me=auth_user_profile)
     my_request_profiles = [i.receiver for i in requests_by_me]
     return render(request, 'profiles/profile-detail.html', {
         'curr_user_profile': curr_user_profile,
@@ -55,27 +55,28 @@ def user_profile_detail_view(request, slug):
 @login_required
 def edit_profile_details(request, slug):
     profile = get_object_or_404(Profile, slug=slug)
-
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST or None,
-                                 request.FILES or None,
-                                 instance=profile)
-        if form.is_valid:
-            form.save()
-            return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': slug}))
+    if (profile.user == request.user):
+        if request.method == 'POST':
+            form = ProfileUpdateForm(request.POST or None,
+                                     request.FILES or None,
+                                     instance=profile)
+            if form.is_valid:
+                form.save()
+                return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': slug}))
+        else:
+            form = ProfileUpdateForm(instance=profile)
+            return render(request, 'profiles/edit.html', {
+                'form': form
+            })
     else:
-        form = ProfileUpdateForm(instance=profile)
-
-    return render(request, 'profiles/edit.html', {
-        'form': form
-    })
+        return HttpResponseForbidden()
 
 
 @login_required
 def user_follow(request, slug):
     receiver = Profile.objects.get(slug=slug)
     sender = Profile.objects.get(user=request.user)
-    Relationship.objects.create(
+    Relationship.objects.get_or_create(
         receiver=receiver, sender=sender, status='send')
     # display message
     return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': slug}))
@@ -106,3 +107,6 @@ def delete_follow_request(request, slug):
     Relationship.objects.filter(
         receiver=me, sender=other_user, status='send').delete()
     return HttpResponseRedirect(reverse('notifications'))
+
+
+

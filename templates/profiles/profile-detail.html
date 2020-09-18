@@ -21,18 +21,20 @@
             <div class="overview">
                 <div class="row__1" style="display: flex;flex-direction: row;align-items: center;justify-content: space-between;">
                     <h4>{{ curr_user_profile.user.username }}</h4>
-                    {% if auth_user_profile in follower_profiles and auth_user_profile not in following_profiles %}
+                    {% if auth_user_profile == curr_user_profile %}
+                        <a href="{% url 'profiles:edit-profile' auth_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></a>
+                    {% elif auth_user_profile in follower_profiles and auth_user_profile not in following_profiles %}
                         <a class="btn waves-effect waves-light" type="submit" name="action">Message</a>
                         <a href="{% url 'profiles:user-unfollow' curr_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Unfollow</a>
                     {% elif curr_user_profile in my_request_profiles %}
                         <a class="btn waves-effect waves-light" type="submit" name="action">Requested <i class="fas fa-check"></i></a>
+                    {% elif auth_user_profile not in following_profiles %}
+                        <a href="{% url 'profiles:user-follow' curr_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Follow</a>
                     {% elif auth_user_profile in follower_profiles and curr_user_profile in auth_user_follower_profiles %}
                         <a class="btn waves-effect waves-light" type="submit" name="action">Message</a>
                         <a href="{% url 'profiles:user-unfollow' curr_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Unfollow</a>
                     {% elif auth_user_profile not in follower_profiles and curr_user_profile in auth_user_follower_profiles %}
                         <a href="{% url 'profiles:user-follow' curr_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Follow Back</a>
-                    {% elif auth_user_profile == curr_user_profile %}
-                        <a href="{% url 'profiles:edit-profile' auth_user_profile.slug %}" class="btn waves-effect waves-light" type="submit" name="action">Edit Profile <i class="fas fa-cog"></i></a>
                     {% endif %}
                 </div>
                 <div class="row__2">
@@ -112,7 +114,7 @@
                                     {% elif following.receiver in my_request_profiles %}
                                         <button class="btn">Requested <i class="fas fa-check"></i></button>
                                     {% else %}
-                                        <button href="{% url 'profiles:user-follow' following.receiver.slug %}" class="btn">Follow</button>
+                                        <a href="{% url 'profiles:user-follow' following.receiver.slug %}" class="btn" style="color:white;">Follow</a>
                                     {% endif %}
                                 {% endif %}
                             </div>

@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import home_view, user_login, user_signup, user_logout, notifications
+from .views import home_view, user_login, user_signup, user_logout, notifications, profile_search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name="home"),
     path('notifications/', notifications, name="notifications"),
+    path('search/', profile_search_view, name="profile_search"),
     path('login/', user_login, name="login"),
     path('signup/', user_signup, name="signup"),
     path('logout/', user_logout, name="logout"),

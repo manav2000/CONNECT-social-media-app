@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block head_css_site %}
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock head_css_site %}
+
+{% block body_profile %}
+
+{% if query %} 
+    <div class="container">
+        <div class="row" style="color: rgba(255,255,255, 0.75)">
+            <h2> Profile containing <span style="color: #26a69a">"{{ query }}"</span> </h1> 
+            <h4> {% with results.count as total_results %} Found {{ total_results }} result{{ total_results | pluralize }} {% endwith %} </h3> 
+        </div>
+        <ul class="collection">
+        {% for profile in results %}
+            <li class="collection-item avatar">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="" class="circle">
+                {% else %}
+                    <img src="{% static 'images/user.png' %}" alt="" class="circle">
+                {% endif %}
+                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a">{{profile.user.username}}</a> 
+                <p style="color: grey">
+                    {{profile.first_name}} {{profile.last_name}}
+                </p>
+                <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+            </li>
+        {% endfor %} 
+        <p><a href ="{% url "profile_search" %}" class="btn"> Search again </a> </p> 
+    </div>
+{% else %}
+    <div class="container">
+        <div class="row" style="color: rgba(255,255,255, 0.75)">
+            <h1> Search for Profiles </h1> 
+        </div>
+        <div class="row">
+            <form method="get">
+                {{ form.as_p }} 
+                <button class="waves-effect waves-light btn" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+
+
+{% endblock body_profile %}

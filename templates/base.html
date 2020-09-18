@@ -23,18 +23,10 @@
             <div class="nav__option_1">
                 <a href="/" class="brand-logo">CONNECT</a>
             </div>
-            <div class="nav__option_2">
-                <form>
-                    <div class="input-field">
-                        <input id="search" type="search" required>
-                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                        <i class="material-icons">close</i>
-                    </div>
-                </form>
-            </div>
             <div class="nav__option_3">
                 <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
-                    <li><a href="{% url 'home' %}" class="active"><i class="fas fa-home-alt"></i></a></li>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home-alt"></i></a></li>
+                    <li><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
                     <li><a href=""><i class="fas fa-location-arrow"></i></a></li>
                     <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
                     <!-- Dropdown Trigger -->
@@ -64,9 +56,6 @@
         $(document).ready(function(){
             $('.modal').modal();
         });
-
-        $('#textarea1').val('New Text');
-        M.textareaAutoResize($('#textarea1'));
     </script>
 </body>
 </html>

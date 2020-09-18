@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
 from django.contrib.auth.models import User
 
-from .forms import LoginForm, UserRegistrationForm
+from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
 
 from profiles.models import Profile, Relationship
 
@@ -15,9 +16,28 @@ def home_view(request):
 
 
 @login_required
+def profile_search_view(request):
+    form = SearchProfileForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchProfileForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Profile.objects.annotate(similarity=TrigramSimilarity(
+                'slug', query), ). filter(similarity__gt=0.1). order_by('-similarity')
+    return render(request, 'search.html', {
+        'form': form,
+        'query': query,
+        'results': results
+    })
+
+
+@login_required
 def notifications(request):
+    auth_user_profile = Profile.objects.get(user=request.user)
     follow_requests = Relationship.objects.get_all_follow_requests(
-        request.user)
+        auth_user_profile)
     return render(request, 'notifications.html', {
         'follow_requests': follow_requests
     })
