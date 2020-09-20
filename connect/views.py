@@ -17,6 +17,7 @@ def home_view(request):
 
 @login_required
 def profile_search_view(request):
+    profiles = Profile.objects.get_all_profiles(me=request.user)
     form = SearchProfileForm()
     query = None
     results = []
@@ -29,7 +30,8 @@ def profile_search_view(request):
     return render(request, 'search.html', {
         'form': form,
         'query': query,
-        'results': results
+        'results': results,
+        'profiles': profiles
     })
 
 
@@ -74,7 +76,7 @@ def user_signup(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-            # Profile.objects.create(user=new_user)
+            Profile.objects.create(user=new_user)
             return HttpResponse('ACCOUNT WAS SUCCESSFULLY CREATED')
     else:
         form = UserRegistrationForm()

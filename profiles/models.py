@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.db.models import Q
 
 # Create your models here.
 
@@ -16,9 +17,6 @@ GENDER = (
 class ProfileManager(models.Manager):
     def get_all_profiles(self, me):
         return Profile.objects.all().exclude(user=me)
-
-    # def get_user_profile(self, request):
-    #     user_obj = User.objects.get(username=request.user)
 
 
 class Profile(models.Model):
@@ -36,7 +34,7 @@ class Profile(models.Model):
     objects = ProfileManager()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.username}"
 
     @property
     def get_username(self):
@@ -59,20 +57,21 @@ STATUS_CHOICES = (
 
 class RelationshipManager(models.Manager):
     def get_all_follow_requests(self, receiver):
-        # p = Profile.objects.get(user=receiver)
         return Relationship.objects.filter(receiver=receiver, status='send')
 
     def get_all_request_by_me(self, me):
-        # p = Profile.objects.get(user=me)
         return Relationship.objects.filter(sender=me, status='send')
 
     def get_all_followers(self, receiver):
-        # p = Profile.objects.get(user=receiver)
         return Relationship.objects.filter(receiver=receiver, status='accepted')
 
     def get_all_following(self, sender):
-        # p = Profile.objects.get(user=sender)
         return Relationship.objects.filter(sender=sender, status='accepted')
+
+    def get_all_friends_for_chat(self, me):
+        friends_to_chat = Relationship.objects.filter(
+            Q(sender=p) & Q(status='accepted'))
+        return [friend.receiver for friend in friends_to_chat]
 
 
 class Relationship(models.Model):

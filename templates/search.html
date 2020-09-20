@@ -27,8 +27,9 @@
                 </p>
                 <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
             </li>
-        {% endfor %} 
+        {% endfor %}
         <p><a href ="{% url "profile_search" %}" class="btn"> Search again </a> </p> 
+        </ul>
     </div>
 {% else %}
     <div class="container">
@@ -41,6 +42,22 @@
                 <button class="waves-effect waves-light btn" type="submit">Search</button>
             </form>
         </div>
+        <ul class="collection">
+        {% for profile in profiles %}
+            <li class="collection-item avatar">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="" class="circle">
+                {% else %}
+                    <img src="{% static 'images/user.png' %}" alt="" class="circle">
+                {% endif %}
+                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a">{{profile.user.username}}</a> 
+                <p style="color: grey">
+                    {{profile.first_name}} {{profile.last_name}}
+                </p>
+                <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+            </li>
+        {% endfor %}
+        </ul>
     </div>
 {% endif %}
 
