@@ -12,7 +12,19 @@ from profiles.models import Profile, Relationship
 
 @login_required
 def home_view(request):
-    return render(request, 'base.html', {})
+    user = Profile.objects.get(user=request.user)
+    friends = Relationship.objects.get_all_friends(me=user)
+    posts = []
+    for friend in friends:
+        if friend.post_set:
+            for post in friend.post_set.all():
+                posts.append(post)
+    print(posts)
+    print(user)
+    return render(request, 'base.html', {
+        'posts': posts,
+        'user': user
+    })
 
 
 @login_required

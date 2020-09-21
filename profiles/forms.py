@@ -2,6 +2,7 @@ from django import forms
 from django.forms.widgets import Select
 
 from .models import Profile
+from posts.models import Post
 from django.contrib.auth.models import User
 
 GENDER = (

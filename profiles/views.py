@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 
 from .models import Profile, Relationship
+from posts.models import Post, Comment, Like, Saved
 from .forms import ProfileUpdateForm
+from posts.forms import PostForm
 
 # Create your views here.
 
@@ -37,7 +39,10 @@ def user_profile_detail_view(request, slug):
     requests_by_me = Relationship.objects.get_all_request_by_me(
         me=auth_user_profile)
     my_request_profiles = [i.receiver for i in requests_by_me]
-    return render(request, 'profiles/profile-detail.html', {
+
+    user_posts = curr_user_profile.post_set.all()
+
+    context_data = {
         'curr_user_profile': curr_user_profile,
         'total_followings': total_followings,
         'total_followers': total_followers,
@@ -48,8 +53,24 @@ def user_profile_detail_view(request, slug):
         'auth_user_profile': auth_user_profile,
         'auth_user_following_profiles': auth_user_following_profiles,
         'auth_user_follower_profiles': auth_user_follower_profiles,
-        'my_request_profiles': my_request_profiles
-    })
+        'my_request_profiles': my_request_profiles,
+        'user_posts': user_posts
+    }
+
+    # form for creating posts
+    if auth_user_profile == curr_user_profile:
+        if request.method == 'POST':
+            form = PostForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                new_post = form.save(commit=False)
+                new_post.user = auth_user_profile
+                new_post.save()
+                return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': auth_user_profile.slug}))
+        else:
+            form = PostForm()
+        context_data['form'] = form
+
+    return render(request, 'profiles/profile-detail.html', context_data)
 
 
 @login_required
@@ -107,6 +128,3 @@ def delete_follow_request(request, slug):
     Relationship.objects.filter(
         receiver=me, sender=other_user, status='send').delete()
     return HttpResponseRedirect(reverse('notifications'))
-
-
-

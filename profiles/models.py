@@ -68,9 +68,9 @@ class RelationshipManager(models.Manager):
     def get_all_following(self, sender):
         return Relationship.objects.filter(sender=sender, status='accepted')
 
-    def get_all_friends_for_chat(self, me):
+    def get_all_friends(self, me):
         friends_to_chat = Relationship.objects.filter(
-            Q(sender=p) & Q(status='accepted'))
+            Q(sender=me) & Q(status='accepted'))
         return [friend.receiver for friend in friends_to_chat]
 
 
