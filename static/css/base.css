@@ -84,3 +84,45 @@ nav {
 .card-content {
     color: rgba(255, 255, 255, 0.85) !important;
 }
+
+.card-action .like a {
+    color: red !important;
+}
+
+.collapsible {
+    border: none !important;
+    box-shadow: none !important;
+    /* transform: translateY(-65px); */
+}
+
+.heading {
+    display: flex;
+    justify-content: end;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    border: none !important;
+}
+
+.heading span:hover {
+    text-decoration: underline;
+}
+
+.comment {
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

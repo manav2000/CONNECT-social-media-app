@@ -6,6 +6,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 
 # Create your models here.
 
+
 # class PostManager(models.Manager):
 #     def get_all_users_who_liked(self, )
 
@@ -34,6 +35,12 @@ class Post(models.Model):
         for like in self.likes.all():
             users_likes.append(like.user)
         return users_likes
+
+    def get_all_users_who_saved(self):
+        saved_posts = []
+        for post in self.saved.all():
+            saved_posts.append(post.user)
+        return saved_posts
 
     def total_comments(self):
         return self.comments.all().count()

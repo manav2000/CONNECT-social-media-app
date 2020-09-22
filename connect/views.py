@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
 from django.contrib.auth.models import User
 
 from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
+from posts.forms import CommentForm
 
 from profiles.models import Profile, Relationship
+from posts.models import Post, Comment
 
 
 @login_required
@@ -19,12 +21,14 @@ def home_view(request):
         if friend.post_set:
             for post in friend.post_set.all():
                 posts.append(post)
-    print(posts)
-    print(user)
-    return render(request, 'base.html', {
+    context_data = {
         'posts': posts,
         'user': user
-    })
+    }
+    form = CommentForm()
+    context_data['form'] = form
+
+    return render(request, 'base.html', context_data)
 
 
 @login_required

@@ -43,10 +43,10 @@
         {% if posts %}
             {% for post in posts %}
                 <div class="row post">
-                    <div class="col m6 offset-m3">
+                    <div class="col m8 offset-m2">
                         <div class="card">
                             <div class="user-info">
-                                {% if post.image %}
+                                {% if post.user.avatar %}
                                     <div class="user-info__avatar" style="background-image: url({{post.user.avatar.url}})">
                                     </div>
                                 {% else %}
@@ -67,14 +67,60 @@
                             <div class="card-content">
                                 <p>{{post.text_content}}</p>
                             </div>
-                            <div class="card-action">
-                                {% if user in post.get_all_users_who_liked %}
-                                    <a href=""><i class="fas fa-heart"></i></a>
-                                {% else %}
-                                    {{post.likes.all}}
-                                    {{user}}
-                                    <a href=""><i class="far fa-heart"></i></a>
-                                {% endif %}
+                            <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <div class="like">
+                                    {% if user in post.get_all_users_who_liked %}
+                                        <a href="{% url 'posts:unlike' post.id %}" style="color:red !important"><i class="fas fa-heart"></i><span style="color:rgba(255, 255, 255, 0.6) !important; font-size:15px;">  {{post.likes.count}}</span></a>
+                                    {% else %}
+                                        <a href="{% url 'posts:like' post.id %}" style="color:red !important"><i class="far fa-heart"></i><span style="color:rgba(255, 255, 255, 0.6) !important; font-size:15px;">  {{post.likes.count}}</span></a>
+                                    {% endif %}
+                                </div>
+                                <div class="save">
+                                    {% if user in post.get_all_users_who_saved %}
+                                        <a href="{% url 'posts:unsave' post.id %}"><i class="fas fa-bookmark"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'posts:save' post.id %}"><i class="far fa-bookmark"></i></a>
+                                    {% endif %}
+                                </div>
+                                <div class="share">
+                                     <a href="" style="color:lightskyblue;"><i class="far fa-share"></i></a>
+                                </div>
+                            </div>
+                            <div class="post-comments">
+                                <ul class="collapsible">
+                                    <li>
+                                        <div class="collapsible-header heading" style="display:flex;justify-content:end;"><span>{{post.comments.all.count}} Comments</span></div>
+                                        <div class="collapsible-body">
+                                            {% for comment in post.comments.all %}
+                                                <div class="comment">
+                                                    {% if comment.user.avatar %}
+                                                        <div class="comment-user" style="background-image:url({{comment.user.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="comment-user" style="background-image:url({% static 'images/user.png' %}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="comment-content">
+                                                        <div style="padding:10px;color:rgba(255,255,255, 0.85);">
+                                                            <p style="font-size:18px; color:#64ffda !important;">{{comment.user.user.username}}</p>
+                                                            <p>{{comment.text}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <form method="post" class="comment-form" action="{% url 'posts:comment' post.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="post_id" value={{post.id}}>
+                                    <input type="text" name="text" maxlength="255" id="id_text" style="color: white;" placeholder="comment....">
+                                    <button class="btn waves-effect waves-light" type="submit" name="action">Send
+                                        <i class="material-icons right">send</i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -109,6 +155,27 @@
             path: '.pagination__next',
             append: '.post',
             history: false,
+        });
+
+        $(document).ready(function(){
+            $('.collapsible').collapsible();
+        });
+
+        var csrftoken = Cookies.get('csrftoken');
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            }
+        });
+        $(document).ready(function(){
+
+            {% block domready %}
+            {% endblock %}
         });
     </script>
 </body>
