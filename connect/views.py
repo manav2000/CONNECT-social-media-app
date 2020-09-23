@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 
 from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
@@ -18,13 +19,23 @@ def home_view(request):
     friends = Relationship.objects.get_all_friends(me=user)
     friends = friends + [user]
     posts = Post.objects.filter(user__in=friends).order_by('-created')
+    form = CommentForm()
+
+    # pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts, 5)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
     context_data = {
         'posts': posts,
-        'user': user
+        'user': user,
+        'form': form
     }
-    form = CommentForm()
-    context_data['form'] = form
-
     return render(request, 'base.html', context_data)
 
 
