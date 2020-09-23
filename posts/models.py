@@ -24,6 +24,9 @@ class Post(models.Model):
     likes = GenericRelation('Like', related_query_name='post')
     saved = GenericRelation('Saved', related_query_name='post')
 
+    class Meta():
+        ordering = ['-created']
+
     def __str__(self):
         return f"{self.pk}"
 
@@ -31,9 +34,7 @@ class Post(models.Model):
         return self.likes.all().count()
 
     def get_all_users_who_liked(self):
-        users_likes = []
-        for like in self.likes.all():
-            users_likes.append(like.user)
+        users_likes = [like.user for like in self.likes.all()]
         return users_likes
 
     def get_all_users_who_saved(self):
@@ -55,6 +56,9 @@ class Comment(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta():
+        ordering = ['-created']
 
     def __str__(self):
         return self.text

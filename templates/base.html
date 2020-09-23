@@ -68,13 +68,13 @@
                                 <p>{{post.text_content}}</p>
                             </div>
                             <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                <div class="like">
-                                    {% if user in post.get_all_users_who_liked %}
-                                        <a href="{% url 'posts:unlike' post.id %}" style="color:red !important"><i class="fas fa-heart"></i><span style="color:rgba(255, 255, 255, 0.6) !important; font-size:15px;">  {{post.likes.count}}</span></a>
+                                <a href="#" data-id="{{ post.id }}" data-action="{% if user in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;">
+                                    {% if user not in post.get_all_users_who_liked %}
+                                        <i class="far fa-heart"></i>
                                     {% else %}
-                                        <a href="{% url 'posts:like' post.id %}" style="color:red !important"><i class="far fa-heart"></i><span style="color:rgba(255, 255, 255, 0.6) !important; font-size:15px;">  {{post.likes.count}}</span></a>
+                                        <i class="fas fa-heart"></i>
                                     {% endif %}
-                                </div>
+                                </a>
                                 <div class="save">
                                     {% if user in post.get_all_users_who_saved %}
                                         <a href="{% url 'posts:unsave' post.id %}"><i class="fas fa-bookmark"></i></a>
@@ -83,14 +83,14 @@
                                     {% endif %}
                                 </div>
                                 <div class="share">
-                                     <a href="" style="color:lightskyblue;"><i class="far fa-share"></i></a>
+                                    <a href="" style="color:lightskyblue;"><i class="far fa-share"></i></a>
                                 </div>
                             </div>
                             <div class="post-comments">
                                 <ul class="collapsible">
                                     <li>
-                                        <div class="collapsible-header heading" style="display:flex;justify-content:end;"><span>{{post.comments.all.count}} Comments</span></div>
-                                        <div class="collapsible-body">
+                                        <div class="collapsible-header heading" style="display:flex;justify-content:end;"><span id="total-com">{{post.comments.all.count}} </span>Comments</div>
+                                        <div class="collapsible-body" id="all_comments" style="border-top: 1px solid #ddd;">
                                             {% for comment in post.comments.all %}
                                                 <div class="comment">
                                                     {% if comment.user.avatar %}
@@ -112,12 +112,12 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div>
-                                <form method="post" class="comment-form" action="{% url 'posts:comment' post.id %}">
+                            <div id="comment-form-div">
+                                <form method="post" class="comment-form" style="display:flex;flex-direction:row;align-items:center;">
                                     {% csrf_token %}
                                     <input type="hidden" name="post_id" value={{post.id}}>
-                                    <input type="text" name="text" maxlength="255" id="id_text" style="color: white;" placeholder="comment....">
-                                    <button class="btn waves-effect waves-light" type="submit" name="action">Send
+                                    <input type="text" name="text" maxlength="255" id="id_text" style="color: white;flex:5;" placeholder="comment....">
+                                    <button class="btn waves-effect waves-light" type="submit" name="action" style="flex:1">Send
                                         <i class="material-icons right">send</i>
                                     </button>
                                 </form>
@@ -129,12 +129,13 @@
         {% endif %}
     </div>
     {% endif %}
+    
 
     {% block body_profile %}
     {% endblock body_profile %}
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         $(".dropdown-trigger").dropdown();
@@ -151,12 +152,6 @@
         $('textarea').css('color', 'white')
         M.textareaAutoResize($('textarea'));
 
-        $('.container').infiniteScroll({
-            path: '.pagination__next',
-            append: '.post',
-            history: false,
-        });
-
         $(document).ready(function(){
             $('.collapsible').collapsible();
         });
@@ -165,6 +160,7 @@
         function csrfSafeMethod(method) {
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
+
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -172,10 +168,83 @@
             }
             }
         });
-        $(document).ready(function(){
 
-            {% block domready %}
-            {% endblock %}
+        $('a.like').click(function(e){
+            e.preventDefault();
+            var previous_action = $(this).data('action');
+            var like_button = $(this);
+            console.log(previous_action);
+            console.log(like_button);
+            $.ajax({
+                type: 'POST',
+                url: '{% url "posts:like" %}',
+                data: {
+                    id: $(this).data('id'),
+                    action: $(this).data('action')
+                },
+                success: function(data){
+                    if (data['status'] == 'ok')
+                    {
+                        // toggle data-action
+                        like_button.data('action', previous_action == 'like' ?
+                        'unlike' : 'like');
+                        // toggle link text
+                        if(like_button.data('action') == 'like') {
+                            like_button.html('<i class="far fa-heart"></i>');
+                        } else {
+                            like_button.html('<i class="fas fa-heart"></i>');
+                        }
+                    }
+                },
+                error: function (response) {
+                    console.log('error')
+                }
+            });
+        });
+
+        $(".comment-form").submit(function (e) {
+            e.preventDefault();
+            var serializedData = $(this).serialize();
+            var comment_list = $(this).parent().prev().children().children().find('#all_comments');
+            var comment_input = $('#id_text');
+            var form = $(this);
+            var total_comments_el = $(this).parent().prev().children().children().children().children()[0];
+            var total_comments = $(this).parent().prev().children().children().children().children()[0].textContent;
+            const total = parseInt(total_comments) + 1;
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'posts:comment' %}",
+                data: serializedData,
+                success: function (response) {
+                    console.log(form);
+                    form.trigger('reset');
+
+                    var instance = JSON.parse(response["instance"]);
+                    var text = instance[0]["fields"]["text"];
+                    var avatar_url = instance[1]["fields"]["avatar"];
+                    var username = instance[2]["fields"]["username"];
+                    console.log(text);
+                    console.log(avatar_url);
+                    console.log(username);
+
+                    comment_list.append( 
+                        `<div class="comment">
+                            <div class="comment-user" style="background-image:url(${avatar_url?"/media/"+avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
+                            </div>
+                            <div class="comment-content">
+                                <div style="padding:10px;color:rgba(255,255,255, 0.85);">
+                                    <p style="font-size:18px; color:#64ffda !important;">${username}</p>
+                                    <p>${text}</p>
+                                </div>
+                            </div>
+                        </div>`
+                    )
+                    total_comments_el.textContent = total;
+                },
+                error: function (response) {
+                    console.log('error')
+                }
+            })
         });
     </script>
 </body>

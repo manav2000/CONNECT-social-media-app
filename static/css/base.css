@@ -121,8 +121,6 @@ nav {
     border-radius: 10px;
 }
 
-.comment-form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
+/* .collapsible-body {
+    
+} */

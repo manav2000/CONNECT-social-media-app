@@ -16,11 +16,8 @@ from posts.models import Post, Comment
 def home_view(request):
     user = Profile.objects.get(user=request.user)
     friends = Relationship.objects.get_all_friends(me=user)
-    posts = []
-    for friend in friends:
-        if friend.post_set:
-            for post in friend.post_set.all():
-                posts.append(post)
+    friends = friends + [user]
+    posts = Post.objects.filter(user__in=friends).order_by('-created')
     context_data = {
         'posts': posts,
         'user': user
