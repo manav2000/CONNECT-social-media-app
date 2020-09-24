@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 
 from .models import Profile, Relationship
 from posts.models import Post, Comment, Like, Saved
@@ -96,6 +97,7 @@ def edit_profile_details(request, slug):
                                      instance=profile)
             if form.is_valid:
                 form.save()
+                messages.success(request, 'PROFILE WAS UPDATED SUCCESSFULLY')
                 return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': slug}))
         else:
             form = ProfileUpdateForm(instance=profile)
