@@ -124,3 +124,21 @@ nav {
 /* .collapsible-body {
     
 } */
+
+.alert-success {
+    background: lightgreen;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.alert-error {
+    background: lightcoral;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.close {
+    background: transparent;
+    border: none;
+    float: right;
+}

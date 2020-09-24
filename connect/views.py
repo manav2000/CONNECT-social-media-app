@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
 from posts.forms import CommentForm
@@ -54,11 +55,13 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    messages.success(
+                        request, 'WELCOME {}'.format(user.username))
                     return redirect('posts:home')
                 else:
-                    return HttpResponse('ACCOUNT IS NOT ACTIVE')
+                    return messages.error(request, 'This account is not active')
             else:
-                return HttpResponse('U DO NOT HAVE AN ACCOUNT PLEASE LOGIN')
+                return messages.error(request, "LOOK'S LIKE U DO NOT HAVE AN ACCOUNT, PLEASE SIGNUP")
     else:
         form = LoginForm()
     return render(request, 'auth/login.html', {
@@ -74,7 +77,8 @@ def user_signup(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
-            return HttpResponse('ACCOUNT WAS SUCCESSFULLY CREATED')
+            messages.success(request, 'ACCOUNT WAS SUCCESSFULLY CREATED')
+            return redirect('login')
     else:
         form = UserRegistrationForm()
     return render(request, 'auth/signup.html', {
@@ -85,4 +89,5 @@ def user_signup(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponse('U WERE LOGGED OUT SUCCESSFULLY')
+    messages.success(request, 'U WERE LOGGED OUT SUCCESSFULLY')
+    return redirect('login')
