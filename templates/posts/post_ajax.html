@@ -1,0 +1,92 @@
+{% load static %}
+
+{% for post in posts %}
+    <div class="row post infinite-item" id="{{post.id}}">
+        <div class="col m8 offset-m2">
+            <div class="card">
+                <div class="user-info">
+                    {% if post.user.avatar %}
+                        <div class="user-info__avatar" style="background-image: url({{post.user.avatar.url}})">
+                        </div>
+                    {% else %}
+                        <div class="user-info__avatar" style="background-image: url({% static 'images/user.png' %})">
+                        </div>
+                    {% endif %}
+                    <div class="user-info__detail">
+                        <a href="{% url 'profiles:profile-detail-view' post.user.slug %}" id="username"><p>{{post.user.user.username}}</p></a>
+                        <p id="location">{{post.location}}</p>
+                        <p id="time">{{post.created}}</p>
+                    </div>
+                    {% if curr_user_profile == user_profile %}
+                        <a href="#!" data-id="{{ post.id }}" class="delete" style="transform:translateX(150px);"><i class="fas fa-trash"></i></a>
+                    {% endif %}
+                </div>
+                <div class="card-image">
+                    {% if post.image %}
+                        <img src="{{post.image.url}}" alt="">
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <p>{{post.text_content}}</p>
+                </div>
+                <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <a href="#" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;">
+                        {% if user_profile not in post.get_all_users_who_liked %}
+                            <i class="far fa-heart"></i>
+                        {% else %}
+                            <i class="fas fa-heart"></i>
+                        {% endif %}
+                        <span>{{post.likes.all.count}}</span>
+                    </a>
+                    {% comment %} <div class="save">
+                        {% if user_profile in post.get_all_users_who_saved %}
+                            <a href="{% url 'posts:unsave' post.id %}"><i class="fas fa-bookmark"></i></a>
+                        {% else %}
+                            <a href="{% url 'posts:save' post.id %}"><i class="far fa-bookmark"></i></a>
+                        {% endif %}
+                    </div> {% endcomment %}
+                    <a style="cursor:pointer;"><i class="far fa-bookmark"></i></a>
+                    <div class="share">
+                        <a style="color:lightskyblue;cursor:pointer;"><i class="far fa-share"></i></a>
+                    </div>
+                </div>
+                <div class="post-comments">
+                    <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header heading" style="display:flex;justify-content:end;"><span id="total-com">{{post.comments.all.count}} </span>Comments</div>
+                            <div class="collapsible-body" id="all_comments" style="border-top: 1px solid #ddd;">
+                                {% for comment in post.comments.all %}
+                                    <div class="comment">
+                                        {% if comment.user.avatar %}
+                                            <div class="comment-user" style="background-image:url({{comment.user.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
+                                            </div>
+                                        {% else %}
+                                            <div class="comment-user" style="background-image:url({% static 'images/user.png' %}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
+                                            </div>
+                                        {% endif %}
+                                        <div class="comment-content">
+                                            <div style="padding:10px;color:rgba(255,255,255, 0.85);">
+                                                <p style="font-size:18px; color:#64ffda !important;">{{comment.user.user.username}}</p>
+                                                <p>{{comment.text}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="comment-form-div">
+                    <form method="post" class="comment-form" style="display:flex;flex-direction:row;align-items:center;">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{post.id}}>
+                        <input type="text" name="text" maxlength="255" id="id_text" style="color: white;flex:5;" placeholder="comment....">
+                        <button class="btn waves-effect waves-light" type="submit" name="action" style="flex:1">Send
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

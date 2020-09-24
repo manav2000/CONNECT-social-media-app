@@ -1,12 +1,39 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
 
 from .models import *
-from profiles.models import Profile
-from .forms import PostForm
+from profiles.models import Profile, Relationship
+from .forms import PostForm, CommentForm
 # Create your views here.
+
+
+@login_required
+def home_view(request):
+    user = Profile.objects.get(user=request.user)
+    friends = Relationship.objects.get_all_friends(me=user)
+    friends = friends + [user]
+    posts = Post.objects.filter(user__in=friends).order_by('-created')
+    form = CommentForm()
+
+    # pagination
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(posts, 5)
+    # try:
+    #     posts = paginator.page(page)
+    # except PageNotAnInteger:
+    #     posts = paginator.page(1)
+    # except EmptyPage:
+    #     posts = paginator.page(paginator.num_pages)
+
+    context_data = {
+        'posts': posts,
+        'user': user,
+        'form': form
+    }
+    return render(request, 'posts/posts.html', context_data)
 
 
 @login_required
@@ -27,27 +54,11 @@ def post_like(request):
             else:
                 post.likes.get(user=user).delete()
                 print('like deleted')
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok', 'total_likes': post.likes.all().count()})
         except:
             print('did not got the post')
             pass
     return JsonResponse({'status': 'error'})
-
-
-@login_required
-def post_save(request, id):
-    post = Post.objects.get(id=id)
-    user = Profile.objects.get(user=request.user)
-    post.saved.create(user=user)
-    return HttpResponseRedirect(reverse('home'))
-
-
-@login_required
-def post_unsave(request, id):
-    post = Post.objects.get(id=id)
-    user = Profile.objects.get(user=request.user)
-    post.saved.get(user=user).delete()
-    return HttpResponseRedirect(reverse('home'))
 
 
 @login_required
@@ -64,5 +75,30 @@ def post_comment(request):
     return JsonResponse({"error": ""}, status=400)
 
 
+@login_required
 def post_delete(request):
-    pass
+    post_id = request.POST.get('id')
+    user = Profile.objects.get(user=request.user)
+    try:
+        post = Post.objects.get(pk=int(post_id))
+        post.delete()
+        return JsonResponse({'status': 'ok'})
+    except:
+        pass
+    return JsonResponse({'error': 'error'})
+
+
+# @login_required
+# def post_save(request, id):
+#     post = Post.objects.get(id=id)
+#     user = Profile.objects.get(user=request.user)
+#     post.saved.create(user=user)
+#     return HttpResponseRedirect(reverse('home'))
+
+
+# @login_required
+# def post_unsave(request, id):
+#     post = Post.objects.get(id=id)
+#     user = Profile.objects.get(user=request.user)
+#     post.saved.get(user=user).delete()
+#     return HttpResponseRedirect(reverse('home'))

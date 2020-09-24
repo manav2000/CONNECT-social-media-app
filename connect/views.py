@@ -3,7 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery, TrigramSimilarity
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 
 from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
@@ -11,32 +10,6 @@ from posts.forms import CommentForm
 
 from profiles.models import Profile, Relationship
 from posts.models import Post, Comment
-
-
-@login_required
-def home_view(request):
-    user = Profile.objects.get(user=request.user)
-    friends = Relationship.objects.get_all_friends(me=user)
-    friends = friends + [user]
-    posts = Post.objects.filter(user__in=friends).order_by('-created')
-    form = CommentForm()
-
-    # pagination
-    page = request.GET.get('page', 1)
-    paginator = Paginator(posts, 5)
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-
-    context_data = {
-        'posts': posts,
-        'user': user,
-        'form': form
-    }
-    return render(request, 'base.html', context_data)
 
 
 @login_required
@@ -81,7 +54,7 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect('home')
+                    return redirect('posts:home')
                 else:
                     return HttpResponse('ACCOUNT IS NOT ACTIVE')
             else:

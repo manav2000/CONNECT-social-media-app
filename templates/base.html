@@ -13,7 +13,7 @@
 </head>
 <body>
     {% if request.user.is_authenticated %}
-        <ul id="dropdown1" class="dropdown-content">
+    <ul id="dropdown1" class="dropdown-content">
         <li><a href="{% url 'profiles:profile-detail-view' user_profile.slug %}"><i class="fas fa-user-circle"></i>  Profile</a></li>
         <li class="divider"></li>
         <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>  Logout</a></li>
@@ -25,7 +25,7 @@
             </div>
             <div class="nav__option_3">
                 <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
-                    <li><a href="{% url 'home' %}"><i class="fas fa-home-alt"></i></a></li>
+                    <li><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt"></i></a></li>
                     <li><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
                     <li><a href=""><i class="fas fa-location-arrow"></i></a></li>
                     <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
@@ -39,115 +39,7 @@
             </div>
         </div>
     </nav>
-    <div class="container infinite-container">
-            {% for post in posts %}
-                <div class="row post infinite-item">
-                    <div class="col m8 offset-m2">
-                        <div class="card">
-                            <div class="user-info">
-                                {% if post.user.avatar %}
-                                    <div class="user-info__avatar" style="background-image: url({{post.user.avatar.url}})">
-                                    </div>
-                                {% else %}
-                                    <div class="user-info__avatar" style="background-image: url({% static 'images/user.png' %})">
-                                    </div>
-                                {% endif %}
-                                <div class="user-info__detail">
-                                    <p id="username">{{post.user.user.username}}</p>
-                                    <p id="location">{{post.location}}</p>
-                                    <p id="time">{{post.created}}</p>
-                                </div>
-                            </div>
-                            <div class="card-image">
-                                {% if post.image %}
-                                    <img src="{{post.image.url}}" alt="">
-                                {% endif %}
-                            </div>
-                            <div class="card-content">
-                                <p>{{post.text_content}}</p>
-                            </div>
-                            <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                <a href="#" data-id="{{ post.id }}" data-action="{% if user in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;">
-                                    {% if user not in post.get_all_users_who_liked %}
-                                        <i class="far fa-heart"></i>
-                                    {% else %}
-                                        <i class="fas fa-heart"></i>
-                                    {% endif %}
-                                </a>
-                                <div class="save">
-                                    {% if user in post.get_all_users_who_saved %}
-                                        <a href="{% url 'posts:unsave' post.id %}"><i class="fas fa-bookmark"></i></a>
-                                    {% else %}
-                                        <a href="{% url 'posts:save' post.id %}"><i class="far fa-bookmark"></i></a>
-                                    {% endif %}
-                                </div>
-                                <div class="share">
-                                    <a href="" style="color:lightskyblue;"><i class="far fa-share"></i></a>
-                                </div>
-                            </div>
-                            <div class="post-comments">
-                                <ul class="collapsible">
-                                    <li>
-                                        <div class="collapsible-header heading" style="display:flex;justify-content:end;"><span id="total-com">{{post.comments.all.count}} </span>Comments</div>
-                                        <div class="collapsible-body" id="all_comments" style="border-top: 1px solid #ddd;">
-                                            {% for comment in post.comments.all %}
-                                                <div class="comment">
-                                                    {% if comment.user.avatar %}
-                                                        <div class="comment-user" style="background-image:url({{comment.user.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
-                                                        </div>
-                                                    {% else %}
-                                                        <div class="comment-user" style="background-image:url({% static 'images/user.png' %}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
-                                                        </div>
-                                                    {% endif %}
-                                                    <div class="comment-content">
-                                                        <div style="padding:10px;color:rgba(255,255,255, 0.85);">
-                                                            <p style="font-size:18px; color:#64ffda !important;">{{comment.user.user.username}}</p>
-                                                            <p>{{comment.text}}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div id="comment-form-div">
-                                <form method="post" class="comment-form" style="display:flex;flex-direction:row;align-items:center;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="post_id" value={{post.id}}>
-                                    <input type="text" name="text" maxlength="255" id="id_text" style="color: white;flex:5;" placeholder="comment....">
-                                    <button class="btn waves-effect waves-light" type="submit" name="action" style="flex:1">Send
-                                        <i class="material-icons right">send</i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        {% if posts.has_next %}
-            <a class="infinite-more-link" href="?page={{ posts.next_page_number }}"></a>
-        {% endif %}
-        <div style="display:flex;flex-direction:row;justify-content:center">
-            <div class="loading" style="display: none;">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="gap-patch">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="circle-clipper right">
-                            <div class="circle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     {% endif %}
-    
 
     {% block body_profile %}
     {% endblock body_profile %}
@@ -158,7 +50,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        var infinite = new Waypoint.Infinite({
+        {% comment %} var infinite = new Waypoint.Infinite({
             element: $('.infinite-container')[0],
             onBeforePageLoad: function () {
                 $('.loading').show();
@@ -166,7 +58,7 @@
             onAfterPageLoad: function ($items) {
                 $('.loading').hide();
             }
-        });
+        }); {% endcomment %}
 
         $(".dropdown-trigger").dropdown();
 
@@ -199,83 +91,11 @@
             }
         });
 
-        $('a.like').click(function(e){
-            e.preventDefault();
-            var previous_action = $(this).data('action');
-            var like_button = $(this);
-            console.log(previous_action);
-            console.log(like_button);
-            $.ajax({
-                type: 'POST',
-                url: '{% url "posts:like" %}',
-                data: {
-                    id: $(this).data('id'),
-                    action: $(this).data('action')
-                },
-                success: function(data){
-                    if (data['status'] == 'ok')
-                    {
-                        // toggle data-action
-                        like_button.data('action', previous_action == 'like' ?
-                        'unlike' : 'like');
-                        // toggle link text
-                        if(like_button.data('action') == 'like') {
-                            like_button.html('<i class="far fa-heart"></i>');
-                        } else {
-                            like_button.html('<i class="fas fa-heart"></i>');
-                        }
-                    }
-                },
-                error: function (response) {
-                    console.log('error')
-                }
-            });
+        $(document).ready(function() {
+            {% block domready %}
+            {% endblock %}
         });
 
-        $(".comment-form").submit(function (e) {
-            e.preventDefault();
-            var serializedData = $(this).serialize();
-            var comment_list = $(this).parent().prev().children().children().find('#all_comments');
-            var comment_input = $('#id_text');
-            var form = $(this);
-            var total_comments_el = $(this).parent().prev().children().children().children().children()[0];
-            var total_comments = $(this).parent().prev().children().children().children().children()[0].textContent;
-            const total = parseInt(total_comments) + 1;
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'posts:comment' %}",
-                data: serializedData,
-                success: function (response) {
-                    console.log(form);
-                    form.trigger('reset');
-
-                    var instance = JSON.parse(response["instance"]);
-                    var text = instance[0]["fields"]["text"];
-                    var avatar_url = instance[1]["fields"]["avatar"];
-                    var username = instance[2]["fields"]["username"];
-                    console.log(text);
-                    console.log(avatar_url);
-                    console.log(username);
-
-                    comment_list.append( 
-                        `<div class="comment">
-                            <div class="comment-user" style="background-image:url(${avatar_url?"/media/"+avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
-                            </div>
-                            <div class="comment-content">
-                                <div style="padding:10px;color:rgba(255,255,255, 0.85);">
-                                    <p style="font-size:18px; color:#64ffda !important;">${username}</p>
-                                    <p>${text}</p>
-                                </div>
-                            </div>
-                        </div>`
-                    )
-                    total_comments_el.textContent = total;
-                },
-                error: function (response) {
-                    console.log('error')
-                }
-            })
-        });
     </script>
 </body>
 </html>

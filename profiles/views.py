@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Profile, Relationship
 from posts.models import Post, Comment, Like, Saved
 from .forms import ProfileUpdateForm
-from posts.forms import PostForm
+from posts.forms import PostForm, CommentForm
 
 # Create your views here.
 
@@ -40,7 +41,19 @@ def user_profile_detail_view(request, slug):
         me=auth_user_profile)
     my_request_profiles = [i.receiver for i in requests_by_me]
 
-    user_posts = curr_user_profile.post_set.all()
+    posts = curr_user_profile.post_set.all()
+
+    form = CommentForm()
+
+    # pagination
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(posts, 3)
+    # try:
+    #     posts = paginator.page(page)
+    # except PageNotAnInteger:
+    #     posts = paginator.page(1)
+    # except EmptyPage:
+    #     posts = paginator.page(paginator.num_pages)
 
     context_data = {
         'curr_user_profile': curr_user_profile,
@@ -54,7 +67,7 @@ def user_profile_detail_view(request, slug):
         'auth_user_following_profiles': auth_user_following_profiles,
         'auth_user_follower_profiles': auth_user_follower_profiles,
         'my_request_profiles': my_request_profiles,
-        'user_posts': user_posts
+        'posts': posts
     }
 
     # form for creating posts
