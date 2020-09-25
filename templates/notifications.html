@@ -29,3 +29,25 @@
         </div>
     </div>
 {% endblock body_profile %}
+
+{% comment %} {% block domready %}
+    $('.delete').click(function(e) {
+        e.preventDefault();
+        console.log($(this).parent().parent()[0]);
+        var req_div = $(this).parent().parent()[0];
+        console.log($(this).data('slug'));
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'profiles:delete-request' %}",
+            data: {
+                slug: $(this).data('slug')
+            },
+            success: function(data) {
+                req_div.remove();
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    })
+{% endblock domready %} {% endcomment %}

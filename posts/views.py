@@ -78,7 +78,6 @@ def post_comment(request):
 @login_required
 def post_delete(request):
     post_id = request.POST.get('id')
-    user = Profile.objects.get(user=request.user)
     try:
         post = Post.objects.get(pk=int(post_id))
         post.delete()
