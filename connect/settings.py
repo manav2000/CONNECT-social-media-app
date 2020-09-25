@@ -39,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
+
     'profiles',
     'posts',
+    'chat',
+
 ]
 
 MIDDLEWARE = [
@@ -71,6 +75,9 @@ TEMPLATES = [
         },
     },
 ]
+
+
+ASGI_APPLICATION = "connect.routing.application"
 
 WSGI_APPLICATION = 'connect.wsgi.application'
 
@@ -145,3 +152,13 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login/'
 LOGOUT_URL = 'logout'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("192.168.99.100", 6379)],
+        },
+    },
+}

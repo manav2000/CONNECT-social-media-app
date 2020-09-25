@@ -27,7 +27,7 @@
                 <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
                     <li><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt"></i></a></li>
                     <li><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
-                    <li><a href=""><i class="fas fa-location-arrow"></i></a></li>
+                    <li><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow"></i></a></li>
                     <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
                     <!-- Dropdown Trigger -->
                     {% if user_profile.avatar %}
@@ -40,7 +40,7 @@
         </div>
     </nav>
     {% endif %}
-    {% include 'messages.html' %}
+    {% comment %} {% include 'messages.html' %} {% endcomment %}
 
     {% block body_profile %}
     {% endblock body_profile %}

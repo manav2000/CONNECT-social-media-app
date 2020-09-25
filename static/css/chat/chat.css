@@ -1,0 +1,41 @@
+.chat-info {
+    color: white;
+}
+
+.chat-info div {
+    display: flex;
+    flex-direction: row;
+    padding-top: 15px;
+    align-items: center;
+}
+
+.chat-info div h5 {
+    padding-left: 15px;
+}
+
+.chat__avatar {
+    height: 50px;
+    width: 50px;
+    background-size: cover;
+    border-radius: 50%;
+}
+
+#chat__messages {
+    height: 350px;
+    color: white;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.msg-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.msg {
+    width: max-content;
+    padding: 10px;
+    margin: 5px;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}

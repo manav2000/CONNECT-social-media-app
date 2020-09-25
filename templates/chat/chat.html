@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block head_css_site %}
+    <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
+{% endblock head_css_site %}
+
+{% block body_profile %}
+    <div class="container">
+        <span id="you" style="visibility:hidden;" data-name="{{me.username}}"></span>
+        <div class="row chat-info">
+            <div>
+                {% if user.profile.avatar %}
+                    <div class="chat__avatar" style="background-image: url({{user.profile.avatar.url}})">
+                    </div>
+                {% else %}
+                    <div class="chat__avatar" style="background-image: url({% static 'images/user.png' %})">
+                    </div>
+                {% endif %}
+                <h5 id="friend">{{user.username}}</h5>
+            </div>
+        </div>
+        <div id="chat__messages">
+            <div id="msg-list">
+                {% for message in messages %}
+                <div class="msg-div" style="display: flex;flex-direction: row;{% if message.sender.username == me.username %}justify-content:flex-end;{% endif %}">
+                    <p class="msg" style="{% if message.sender.username == me.username %}background:teal;{% else %}background:darkslateblue;{% endif %}">{{message.text}}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="text" name="message" id="message" required>
+                <input type="submit" value="Send" class="btn" id="msg-send">
+            </form>
+        </div>
+    </div>
+{% endblock body_profile %}
+
+{% block domready %}
+
+    const URL = 'ws://'+ window.location.host + window.location.pathname;
+    console.log(URL);
+
+    const ws = new WebSocket(URL);
+
+    console.log($('#you').data('name'));
+
+    function updateScroll(){
+        var element = document.getElementById("chat__messages");
+        element.scrollTop = element.scrollHeight;
+    }
+
+    updateScroll();
+
+    ws.onopen = (e) => {
+        console.log('chat channel is opened')
+    }
+
+    ws.onmessage = (e) => {
+        const username = JSON.parse(e.data).username;
+        const text = JSON.parse(e.data).text;
+        const msg = JSON.parse(text);
+        const me = $('#you').data('name');
+
+        var ul = document.querySelector('#msg-list');
+
+        var div = document.createElement('div');
+        div.setAttribute('class', 'msg-div');
+        if (me == username) {
+            div.style.justifyContent = 'flex-end';
+        }
+
+        var p = document.createElement('p');
+        p.setAttribute('class', 'msg');
+        if (me == username) {
+            p.style.background = 'teal';
+        } else {
+            p.style.background = 'darkslateblue';
+        }
+        p.append(document.createTextNode(`${msg['message']}`));
+        div.append(p)
+        ul.append(div);
+        updateScroll();
+    }
+
+    ws.onclose = (e) => {
+        console.log('Chat socket closed unexpectedly');
+    }
+
+    document.querySelector('#msg-send').onclick = (e) => {
+            e.preventDefault();
+            const messageInputDom = document.querySelector('#message');
+            const message = messageInputDom.value;
+            ws.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+
+{% endblock domready %}
