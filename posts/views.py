@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
+from django.contrib.auth.models import User
 
 from .models import *
 from profiles.models import Profile, Relationship
@@ -12,9 +13,20 @@ from .forms import PostForm, CommentForm
 
 @login_required
 def home_view(request):
+    admin = User.objects.get(is_superuser=True)
+    admin_prof = Profile.objects.get(user=admin)
+
     user = Profile.objects.get(user=request.user)
-    friends = Relationship.objects.get_all_friends(me=user)
+
+    followers = Relationship.objects.get_all_followers(user)
+    followings = Relationship.objects.get_all_following(user)
+    friends = list(set([following.receiver for following in followings] +
+                       [follower.sender for follower in followers]))
     friends = friends + [user]
+
+    if admin_prof not in friends:
+        friends.append(admin_prof)
+
     posts = Post.objects.filter(user__in=friends).order_by('-created')
     form = CommentForm()
 
