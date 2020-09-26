@@ -67,7 +67,7 @@ nav {
 }
 
 .user-info #username {
-    font-size: 26px !important;
+    font-size: 30px !important;
     color: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -82,6 +82,8 @@ nav {
 }
 
 .card-content {
+    font-size: 22px;
+    font-weight: 450;
     color: rgba(255, 255, 255, 0.85) !important;
 }
 
@@ -97,7 +99,7 @@ nav {
 
 .heading {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end !important;
     background: transparent !important;
     color: rgba(255, 255, 255, 0.5) !important;
     border: none !important;

@@ -21,7 +21,7 @@
                 {% else %}
                     <img src="{% static 'images/user.png' %}" alt="" class="circle">
                 {% endif %}
-                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a">{{profile.user.username}}</a> 
+                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a;font-size:20px;">{{profile.user.username}}</a> 
                 <p style="color: grey">
                     {{profile.first_name}} {{profile.last_name}}
                 </p>
@@ -50,7 +50,7 @@
                 {% else %}
                     <img src="{% static 'images/user.png' %}" alt="" class="circle">
                 {% endif %}
-                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a">{{profile.user.username}}</a> 
+                <a href="{% url 'profiles:profile-detail-view' profile.slug %}" class="title" style="color: #26a69a;font-size:20px;">{{profile.user.username}}</a> 
                 <p style="color: grey">
                     {{profile.first_name}} {{profile.last_name}}
                 </p>

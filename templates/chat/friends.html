@@ -7,6 +7,9 @@
 {% block body_profile %}
 
     <div class="container">
+        <div class="row" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+            <h4 style="color:white">Chat</h4>
+        </div>
         {% for friend in friends %}
             <div class="row" style="display:flex;justify-content:center;margin-top:20px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;width:70%;background:rgba(255,255,255,0.05);padding:10px;border-radius:10px;">
@@ -18,7 +21,7 @@
                             <div class="avatar" style="background-image: url({% static 'images/user.png' %})">
                             </div>
                         {% endif %}
-                        <div class="name" style="color:white;">
+                        <div class="name" style="color:white;padding-left:10px;font-size:20px;">
                             {{friend.user.username}}
                         </div>
                     </div>

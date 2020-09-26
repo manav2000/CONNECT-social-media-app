@@ -18,7 +18,7 @@
                         {% else %}
                             <div class="noti__avatar" style="background-image:url({% static 'images/user.png' %})"></div>
                         {% endif %}
-                        <p style="margin-left:20px" class="noti__text"><span style="color:#26a69a">{{follow_request.sender.user.username}}</span> sent you friend request </p>
+                        <p style="margin-left:20px" class="noti__text"><span style="color:#26a69a;font-size:20px;">{{follow_request.sender.user.username}}</span> sent you friend request </p>
                     </div>
                     <div style="display:flex; flex-direction: row; align-items:center">
                         <a href="{% url 'profiles:confirm-request' follow_request.sender.slug %}" class="btn">Confirm</a>
