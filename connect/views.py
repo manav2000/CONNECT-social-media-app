@@ -59,9 +59,12 @@ def user_login(request):
                         request, 'WELCOME {}'.format(user.username))
                     return redirect('posts:home')
                 else:
-                    return messages.error(request, 'This account is not active')
+                    messages.error(request, 'THIS ACCOUNT IS NOT ACTIVE')
+                    return redirect('login')
             else:
-                return messages.error(request, "LOOK'S LIKE U DO NOT HAVE AN ACCOUNT, PLEASE SIGNUP")
+                messages.error(
+                    request, "INVALID LOGIN CREDENTIAL'S")
+                return redirect('login')
     else:
         form = LoginForm()
     return render(request, 'auth/login.html', {

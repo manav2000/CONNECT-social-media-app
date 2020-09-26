@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+import re
 
 
 class LoginForm(forms.Form):
@@ -8,6 +9,7 @@ class LoginForm(forms.Form):
 
 
 class UserRegistrationForm(forms.ModelForm):
+    email = forms.CharField(label='Email', widget=forms.EmailInput)
     password = forms.CharField(label='Password',
                                widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password',
@@ -15,7 +17,19 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username',)
+
+    def clean_username(self):
+        cd = self.cleaned_data
+        if cd['username'] in [user.username for user in User.objects.all()]:
+            raise forms.ValidationError('Username is already taken.')
+        return cd['username']
+
+    def clean_email(self):
+        cd = self.cleaned_data
+        if not re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', cd['email']):
+            raise forms.ValidationError('Please insert a valid email address.')
+        return cd['email']
 
     def clean_password2(self):
         cd = self.cleaned_data
