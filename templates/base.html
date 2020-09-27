@@ -51,15 +51,16 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        {% comment %} var infinite = new Waypoint.Infinite({
+        var infinite = new Waypoint.Infinite({
             element: $('.infinite-container')[0],
             onBeforePageLoad: function () {
                 $('.loading').show();
             },
             onAfterPageLoad: function ($items) {
                 $('.loading').hide();
+                $('.collapsible').collapsible();
             }
-        }); {% endcomment %}
+        });
 
         $(".dropdown-trigger").dropdown();
 
@@ -75,7 +76,7 @@
         $('textarea').css('color', 'white')
         M.textareaAutoResize($('textarea'));
 
-        $(document).ready(function(){
+        document.addEventListener('DOMContentLoaded', function() {
             $('.collapsible').collapsible();
         });
 
@@ -92,11 +93,112 @@
             }
         });
 
-        $(document).ready(function() {
-            {% block domready %}
-            {% endblock %}
-        });
+        {% block domready %}
+        {% endblock %}
 
+        function like_func(el){
+            //e.preventDefault();
+            var previous_action = el.getAttribute('data-action');
+            var like_button = el;
+            console.log(previous_action);
+            console.log(like_button);
+            $.ajax({
+                type: 'POST',
+                url: '{% url "posts:like" %}',
+                data: {
+                    id: el.getAttribute('data-id'),
+                    action: el.getAttribute('data-action'),
+                },
+                success: function(data){
+                    if (data['status'] == 'ok')
+                    {
+                        console.log(data);
+                        // toggle data-action
+                        like_button.setAttribute('data-action', previous_action == 'like' ?
+                        'unlike' : 'like');
+                        // toggle link text
+                        if(like_button.getAttribute('data-action') == 'like') {
+                            like_button.innerHTML = `<i class="far fa-heart"></i><span> ${data.total_likes}</span>`;
+                        } else {
+                            like_button.innerHTML = `<i class="fas fa-heart"></i><span> ${data.total_likes}</span>`;
+                        }
+                    }
+                },
+                error: function (response) {
+                    console.log('error')
+                }
+            });
+        };
+
+        function comment_func (e){
+            e.preventDefault();
+            var target = e.target;
+            console.log(target.childNodes);
+            var post_id = target.childNodes[3].value;
+            var text = target.childNodes[5].value;
+            var serializedData = {
+                'post_id': post_id,
+                'text': text
+            };
+            console.log(serializedData);
+            var comment_list = target.parentNode.previousSibling.previousSibling.childNodes[1].childNodes[1].childNodes[3];
+            console.log(comment_list);
+            var total_comments_el = target.parentNode.previousSibling.previousSibling.childNodes[1].childNodes[1].childNodes[1].childNodes[1];
+            console.log(total_comments_el);
+            var total_comments = total_comments_el.textContent;
+            var total = parseInt(total_comments) + 1;
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'posts:comment' %}",
+                data: serializedData,
+                success: function (response) {
+                    target.reset();
+
+                    var instance = JSON.parse(response["instance"]);
+                    var text = instance[0]["fields"]["text"];
+                    var avatar_url = instance[1]["fields"]["avatar"];
+                    var username = instance[2]["fields"]["username"];
+                    console.log(text);
+                    console.log(avatar_url);
+                    console.log(username);
+
+                    var com_div = document.createElement('div');
+                    com_div.setAttribute('class', 'comment');
+
+                    var com_user_div = document.createElement('div');
+                    com_user_div.setAttribute('class', 'comment-user');
+                    com_user_div.setAttribute('style', `background-image:url(${avatar_url?"/media/"+avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;`);
+
+                    com_div.append(com_user_div);
+
+                    var com_cont_div = document.createElement('div');
+                    com_cont_div.setAttribute('class', 'comment-content');
+
+                    var div = document.createElement('div');
+                    div.setAttribute('style', 'padding:10px;color:rgba(255,255,255, 0.85);');
+
+                    var user_p = document.createElement('p');
+                    user_p.setAttribute('style', 'font-size:18px; color:#64ffda !important;');
+                    user_p.textContent = username;
+
+                    var text_p = document.createElement('p');
+                    text_p.textContent = text;
+
+                    div.append(user_p);
+                    div.append(text_p);
+                    com_cont_div.append(div);
+
+                    com_div.append(com_cont_div);
+
+                    comment_list.append(com_div);
+
+                    total_comments_el.textContent = total;
+                },
+                error: function (response) {
+                    console.log('error')
+                }
+            })
+        }
     </script>
 </body>
 </html>

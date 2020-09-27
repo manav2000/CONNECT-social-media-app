@@ -58,7 +58,7 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta():
-        ordering = ['-created']
+        ordering = ['created']
 
     def __str__(self):
         return self.text

@@ -149,7 +149,7 @@
             <div class="container infinite-container">
                 {% include 'posts/post_ajax.html' %}
             </div>
-            {% comment %} {% if posts.has_next %}
+            {% if posts.has_next %}
                 <a class="infinite-more-link" href="?page={{ posts.next_page_number }}"></a>
             {% endif %}
             <div style="display:flex;flex-direction:row;justify-content:center">
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-            </div> {% endcomment %}
+            </div>
         </div>
         {% comment %} <div id="test-swipe-2" class="col s12">
             <h2>SAVED</h2>
@@ -179,95 +179,17 @@
 {% endblock body_profile %}
 
 {% block domready %}
-    $('a.like').click(function(e){
-            e.preventDefault();
-            var previous_action = $(this).data('action');
-            var like_button = $(this);
-            console.log(previous_action);
-            console.log(like_button.find('span'));
-            $.ajax({
-                type: 'POST',
-                url: '{% url "posts:like" %}',
-                data: {
-                    id: $(this).data('id'),
-                    action: $(this).data('action')
-                },
-                success: function(data){
-                    if (data['status'] == 'ok')
-                    {
-                        // toggle data-action
-                        like_button.data('action', previous_action == 'like' ?
-                        'unlike' : 'like');
-                        // toggle link text
-                        if(like_button.data('action') == 'like') {
-                            like_button.html(`<i class="far fa-heart"></i><span> ${data.total_likes}</span>`);
-                        } else {
-                            like_button.html(`<i class="fas fa-heart"></i><span> ${data.total_likes}</span>`);
-                        }
-                    }
-                },
-                error: function (response) {
-                    console.log('error')
-                }
-            });
-        });
-
-        $(".comment-form").submit(function (e) {
-            e.preventDefault();
-            var serializedData = $(this).serialize();
-            var comment_list = $(this).parent().prev().children().children().find('#all_comments');
-            var comment_input = $('#id_text');
-            var form = $(this);
-            var total_comments_el = $(this).parent().prev().children().children().children().children()[0];
-            var total_comments = $(this).parent().prev().children().children().children().children()[0].textContent;
-            const total = parseInt(total_comments) + 1;
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'posts:comment' %}",
-                data: serializedData,
-                success: function (response) {
-                    console.log(form);
-                    form.trigger('reset');
-
-                    var instance = JSON.parse(response["instance"]);
-                    var text = instance[0]["fields"]["text"];
-                    var avatar_url = instance[1]["fields"]["avatar"];
-                    var username = instance[2]["fields"]["username"];
-                    console.log(text);
-                    console.log(avatar_url);
-                    console.log(username);
-
-                    comment_list.append( 
-                        `<div class="comment">
-                            <div class="comment-user" style="background-image:url(${avatar_url?"/media/"+avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;">
-                            </div>
-                            <div class="comment-content">
-                                <div style="padding:10px;color:rgba(255,255,255, 0.85);">
-                                    <p style="font-size:18px; color:#64ffda !important;">${username}</p>
-                                    <p>${text}</p>
-                                </div>
-                            </div>
-                        </div>`
-                    )
-                    total_comments_el.textContent = total;
-                },
-                error: function (response) {
-                    console.log('error')
-                }
-            })
-        });
-
-        $('.delete').click(function(e) {
-            e.preventDefault();
-            console.log($(this).parent().parent().parent().parent()[0]);
-            var id = $(this).data('id');
-            var post_node = $(this).parent().parent().parent().parent()[0];
+        function delete_func(el) {
+            console.log(el.parentNode.parentNode.parentNode.parentNode);
+            var id = el.getAttribute('data-id');
+            console.log(id);
+            var post_node = el.parentNode.parentNode.parentNode.parentNode;
             $.ajax({
                 type: 'POST',
                 url: "{% url 'posts:delete' %}",
                 data:
                 {
-                    id: $(this).data('id')
+                    id: id
                 },
                 success: function(data) {
                     post_node.remove();
@@ -276,5 +198,5 @@
                     console.log(error);
                 }
             });
-        });
+        };
 {% endblock domready %}

@@ -18,7 +18,7 @@
                         <p id="time">{{post.created}}</p>
                     </div>
                     {% if curr_user_profile == user_profile %}
-                        <a href="#!" data-id="{{ post.id }}" class="delete" style="transform:translateX(150px);"><i class="fas fa-trash"></i></a>
+                        <a onclick="delete_func(this)" data-id="{{ post.id }}" class="delete" style="transform:translateX(150px);cursor:pointer;"><i class="fas fa-trash"></i></a>
                     {% endif %}
                 </div>
                 <div class="card-image">
@@ -30,7 +30,7 @@
                     <p>{{post.text_content}}</p>
                 </div>
                 <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <a href="#" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;">
+                    <a onclick="like_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;cursor:pointer;">
                         {% if user_profile not in post.get_all_users_who_liked %}
                             <i class="far fa-heart"></i>
                         {% else %}
@@ -79,7 +79,7 @@
                     </ul>
                 </div>
                 <div id="comment-form-div">
-                    <form method="post" class="comment-form" style="display:flex;flex-direction:row;align-items:center;">
+                    <form onsubmit="comment_func(event)" class="comment-form" style="display:flex;flex-direction:row;align-items:center;" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{post.id}}>
                         <input type="text" name="text" maxlength="255" id="id_text" style="color: white;flex:5;" placeholder="comment....">

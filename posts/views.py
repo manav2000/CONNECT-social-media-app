@@ -31,14 +31,14 @@ def home_view(request):
     form = CommentForm()
 
     # pagination
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(posts, 5)
-    # try:
-    #     posts = paginator.page(page)
-    # except PageNotAnInteger:
-    #     posts = paginator.page(1)
-    # except EmptyPage:
-    #     posts = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts, 3)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
 
     context_data = {
         'posts': posts,

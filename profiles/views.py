@@ -47,14 +47,14 @@ def user_profile_detail_view(request, slug):
     form = CommentForm()
 
     # pagination
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(posts, 3)
-    # try:
-    #     posts = paginator.page(page)
-    # except PageNotAnInteger:
-    #     posts = paginator.page(1)
-    # except EmptyPage:
-    #     posts = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts, 3)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
 
     context_data = {
         'curr_user_profile': curr_user_profile,
