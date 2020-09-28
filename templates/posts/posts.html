@@ -28,3 +28,40 @@
         </div>
     </div>
 {% endblock body_profile %}
+
+{% block domready %}
+    function save_func(el){
+        var previous_action = el.getAttribute('data-action');
+        var post_id = el.getAttribute('data-id');
+        var save_button = el;
+        console.log(previous_action);
+        console.log(save_button);
+        console.log(post_id);
+        $.ajax({
+            type: 'POST',
+            url: '{% url "posts:save" %}',
+            data: {
+                id: el.getAttribute('data-id'),
+                action: el.getAttribute('data-action'),
+            },
+            success: function(data){
+                if (data['status'] == 'ok')
+                {
+                    console.log(data);
+                    // toggle data-action
+                    save_button.setAttribute('data-action', previous_action == 'save' ?
+                    'unsave' : 'save');
+                    // toggle link text
+                    if(save_button.getAttribute('data-action') == 'save') {
+                        save_button.innerHTML = `<i class="far fa-bookmark"></i>`;
+                    } else {
+                        save_button.innerHTML = `<i class="fas fa-bookmark"></i>`;
+                    }
+                }
+            },
+            error: function (response) {
+                console.log('error')
+            }
+        });
+    };
+{% endblock domready %}

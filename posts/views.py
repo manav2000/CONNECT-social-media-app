@@ -32,7 +32,7 @@ def home_view(request):
 
     # pagination
     page = request.GET.get('page', 1)
-    paginator = Paginator(posts, 3)
+    paginator = Paginator(posts, 5)
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -99,17 +99,26 @@ def post_delete(request):
     return JsonResponse({'error': 'error'})
 
 
-# @login_required
-# def post_save(request, id):
-#     post = Post.objects.get(id=id)
-#     user = Profile.objects.get(user=request.user)
-#     post.saved.create(user=user)
-#     return HttpResponseRedirect(reverse('home'))
-
-
-# @login_required
-# def post_unsave(request, id):
-#     post = Post.objects.get(id=id)
-#     user = Profile.objects.get(user=request.user)
-#     post.saved.get(user=user).delete()
-#     return HttpResponseRedirect(reverse('home'))
+@login_required
+def post_save(request):
+    user = Profile.objects.get(user=request.user)
+    post_id = request.POST.get('id')
+    action = request.POST.get('action')
+    print(post_id, action)
+    if post_id and action:
+        print('inside if')
+        try:
+            post = Post.objects.get(pk=int(post_id))
+            print(post)
+            print('got the post')
+            if action == 'save':
+                post.saved.create(user=user)
+                print('save created')
+            else:
+                post.saved.get(user=user).delete()
+                print('save deleted')
+            return JsonResponse({'status': 'ok'})
+        except:
+            print('did not got the post')
+            pass
+    return JsonResponse({'status': 'error'})

@@ -38,14 +38,13 @@
                         {% endif %}
                         <span>{{post.likes.all.count}}</span>
                     </a>
-                    {% comment %} <div class="save">
-                        {% if user_profile in post.get_all_users_who_saved %}
-                            <a href="{% url 'posts:unsave' post.id %}"><i class="fas fa-bookmark"></i></a>
+                    <a onclick="save_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_saved %}un{% endif %}save" class="save button" style="cursor:pointer;">
+                        {% if user_profile not in post.get_all_users_who_saved %}
+                            <i class="far fa-bookmark"></i>
                         {% else %}
-                            <a href="{% url 'posts:save' post.id %}"><i class="far fa-bookmark"></i></a>
+                            <i class="fas fa-bookmark"></i>
                         {% endif %}
-                    </div> {% endcomment %}
-                    <a style="cursor:pointer;"><i class="far fa-bookmark"></i></a>
+                    </a>
                     <div class="share">
                         <a style="color:lightskyblue;cursor:pointer;"><i class="far fa-share"></i></a>
                     </div>
@@ -54,7 +53,7 @@
                     <ul class="collapsible">
                         <li>
                             <div class="collapsible-header heading">
-                            <span id="total-com">{{post.comments.all.count}} </span>Comments
+                            <span id="total-com">{{post.comments.all.count}} Comment{{post.comments.all.count|pluralize}}</span>
                             </div>
                             <div class="collapsible-body" id="all_comments" style="border-top: 1px solid #ddd;">
                                 {% for comment in post.comments.all %}

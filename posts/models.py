@@ -38,9 +38,7 @@ class Post(models.Model):
         return users_likes
 
     def get_all_users_who_saved(self):
-        saved_posts = []
-        for post in self.saved.all():
-            saved_posts.append(post.user)
+        saved_posts = [post.user for save in self.saved.all()]
         return saved_posts
 
     def total_comments(self):

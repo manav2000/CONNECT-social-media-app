@@ -38,9 +38,9 @@
                     {% endif %}
                 </div>
                 <div class="row__2">
-                    <p>0 posts</p>
-                    <a class="modal-trigger" data-target="modal1">{{ total_followers }} followers</a>
-                    <a class="modal-trigger" data-target="modal2">{{ total_followings }} following</a>
+                    <p>{{curr_user_profile.post_set.all.count}} post{{curr_user_profile.post_set.all.count|pluralize}}</p>
+                    <a class="modal-trigger" data-target="modal1">{{ total_followers }} follower{{ total_followers|pluralize}}</a>
+                    <a class="modal-trigger" data-target="modal2">{{ total_followings }} following{{ total_followings|pluralize }}</a>
                 </div>
                 <div class="row__3">
                     <p style="font-size:20px;font-weight:500px;">{{curr_user_profile.first_name}} {{curr_user_profile.last_name}}</p>
@@ -141,8 +141,8 @@
     <div>
         <div class="divider"></div>
         <ul id="tabs-swipe-demo" class="tabs">
-            <li class="tab col s3"><a href="#test-swipe-1">POSTS</a></li>
-            {% comment %} <li class="tab col s3"><a class="active" href="#test-swipe-2">SAVED</a></li> {% endcomment %}
+            <li class="tab col s3"><a class="active" href="#test-swipe-1">POSTS</a></li>
+            <li class="tab col s3"><a href="#test-swipe-2">SAVED</a></li>
         </ul>
         <div class="divider"></div>
         <div id="test-swipe-1" class="col s12">
@@ -170,33 +170,33 @@
                 </div>
             </div>
         </div>
-        {% comment %} <div id="test-swipe-2" class="col s12">
+        <div id="test-swipe-2" class="col s12">
             <h2>SAVED</h2>
-        </div> {% endcomment %}
+        </div>
     </div>
 </div>
 
 {% endblock body_profile %}
 
 {% block domready %}
-        function delete_func(el) {
-            console.log(el.parentNode.parentNode.parentNode.parentNode);
-            var id = el.getAttribute('data-id');
-            console.log(id);
-            var post_node = el.parentNode.parentNode.parentNode.parentNode;
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'posts:delete' %}",
-                data:
-                {
-                    id: id
-                },
-                success: function(data) {
-                    post_node.remove();
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        };
+    function delete_func(el) {
+        console.log(el.parentNode.parentNode.parentNode.parentNode);
+        var id = el.getAttribute('data-id');
+        console.log(id);
+        var post_node = el.parentNode.parentNode.parentNode.parentNode;
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'posts:delete' %}",
+            data:
+            {
+                id: id
+            },
+            success: function(data) {
+                post_node.remove();
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    };
 {% endblock domready %}
