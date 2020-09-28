@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.db.models import Q
 
+
 # Create your models here.
 
 GENDER = (
@@ -17,6 +18,14 @@ GENDER = (
 class ProfileManager(models.Manager):
     def get_all_profiles(self, me):
         return Profile.objects.all().exclude(user=me)
+
+    def get_saved_posts(self, me, post_class):
+        saved_posts_ids = [post.object_id for post in me.saved_set.all()]
+        saved_posts = []
+        for post in post_class.objects.all():
+            if post.id in saved_posts_ids:
+                saved_posts.append(post)
+        return saved_posts
 
 
 class Profile(models.Model):

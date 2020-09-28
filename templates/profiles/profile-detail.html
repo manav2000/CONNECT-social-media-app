@@ -142,7 +142,9 @@
         <div class="divider"></div>
         <ul id="tabs-swipe-demo" class="tabs">
             <li class="tab col s3"><a class="active" href="#test-swipe-1">POSTS</a></li>
-            <li class="tab col s3"><a href="#test-swipe-2">SAVED</a></li>
+            {% if curr_user_profile == user_profile %}
+                <li class="tab col s3"><a href="#test-swipe-2">SAVED</a></li>
+            {% endif %}
         </ul>
         <div class="divider"></div>
         <div id="test-swipe-1" class="col s12">
@@ -170,9 +172,37 @@
                 </div>
             </div>
         </div>
+        {% if curr_user_profile == user_profile %}
         <div id="test-swipe-2" class="col s12">
-            <h2>SAVED</h2>
+        {% with saved_posts as posts %}
+            <div class="container infinite-container">
+                {% with section='save'  %}
+                    {% include 'posts/post_ajax.html' %}
+                {% endwith %}
+            </div>
+            {% if posts.has_next %}
+                <a class="infinite-more-link" href="?page={{ posts.next_page_number }}"></a>
+            {% endif %}
+            <div style="display:flex;flex-direction:row;justify-content:center">
+                <div class="loading" style="display: none;">
+                    <div class="preloader-wrapper big active">
+                        <div class="spinner-layer spinner-blue-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
         </div>
+        {% endif %}
     </div>
 </div>
 
@@ -199,4 +229,68 @@
             }
         });
     };
+    {% if curr_user_profile == user_profile %}
+        function save_func(el){
+        var previous_action = el.getAttribute('data-action');
+        var post_id = el.getAttribute('data-id');
+        var save_button = el;
+        console.log(previous_action);
+        console.log(save_button);
+        console.log(post_id);
+        var main_node = el.parentNode.parentNode.parentNode.parentNode;
+        console.log(main_node);
+        $.ajax({
+            type: 'POST',
+            url: '{% url "posts:save" %}',
+            data: {
+                id: el.getAttribute('data-id'),
+                action: 'unsave'
+            },
+            success: function(data){
+                if (data['status'] == 'ok')
+                {
+                    main_node.remove();
+                }
+            },
+            error: function (response) {
+                console.log('error')
+            }
+        });
+    };
+    {% else %}
+    function save_func(el){
+        var previous_action = el.getAttribute('data-action');
+        var post_id = el.getAttribute('data-id');
+        var save_button = el;
+        console.log(previous_action);
+        console.log(save_button);
+        console.log(post_id);
+        $.ajax({
+            type: 'POST',
+            url: '{% url "posts:save" %}',
+            data: {
+                id: el.getAttribute('data-id'),
+                action: el.getAttribute('data-action'),
+            },
+            success: function(data){
+                if (data['status'] == 'ok')
+                {
+                    console.log(data);
+                    // toggle data-action
+                    save_button.setAttribute('data-action', previous_action == 'save' ?
+                    'unsave' : 'save');
+                    // toggle link text
+                    if(save_button.getAttribute('data-action') == 'save') {
+                        save_button.innerHTML = `<i class="far fa-bookmark"></i>`;
+                    } else {
+                        save_button.innerHTML = `<i class="fas fa-bookmark"></i>`;
+                    }
+                }
+            },
+            error: function (response) {
+                console.log('error')
+            }
+        });
+    };
+    {% endif %}
 {% endblock domready %}

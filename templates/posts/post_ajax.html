@@ -17,8 +17,10 @@
                         <p id="location">{{post.location}}</p>
                         <p id="time">{{post.created}}</p>
                     </div>
-                    {% if curr_user_profile == user_profile %}
+                    {% if section != 'save' %}
+                        {% if curr_user_profile == user_profile %}
                         <a onclick="delete_func(this)" data-id="{{ post.id }}" class="delete" style="transform:translateX(150px);cursor:pointer;"><i class="fas fa-trash"></i></a>
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="card-image">
@@ -30,7 +32,7 @@
                     <p>{{post.text_content}}</p>
                 </div>
                 <div class="card-action" style="font-size:20px;display:flex;justify-content:space-around;border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <a onclick="like_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_liked %}un{% endif %}like" class="like button" style="color:red;cursor:pointer;">
+                    <a onclick="like_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_liked %}un{% endif %}like" class="like button tooltipped" style="color:red;cursor:pointer;" data-position="bottom" data-tooltip="like/unlike">
                         {% if user_profile not in post.get_all_users_who_liked %}
                             <i class="far fa-heart"></i>
                         {% else %}
@@ -38,14 +40,14 @@
                         {% endif %}
                         <span>{{post.likes.all.count}}</span>
                     </a>
-                    <a onclick="save_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_saved %}un{% endif %}save" class="save button" style="cursor:pointer;">
+                    <a onclick="save_func(this)" data-id="{{ post.id }}" data-action="{% if user_profile in post.get_all_users_who_saved %}un{% endif %}save" class="save button tooltipped" style="cursor:pointer;" data-position="bottom" data-tooltip="save/unsave">
                         {% if user_profile not in post.get_all_users_who_saved %}
                             <i class="far fa-bookmark"></i>
                         {% else %}
                             <i class="fas fa-bookmark"></i>
                         {% endif %}
                     </a>
-                    <div class="share">
+                    <div class="share tooltipped" data-position="bottom" data-tooltip="share">
                         <a style="color:lightskyblue;cursor:pointer;"><i class="far fa-share"></i></a>
                     </div>
                 </div>

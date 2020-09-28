@@ -59,6 +59,7 @@
             onAfterPageLoad: function ($items) {
                 $('.loading').hide();
                 $('.collapsible').collapsible();
+                $('.tooltipped').tooltip();
             }
         });
 
@@ -78,6 +79,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             $('.collapsible').collapsible();
+        });
+
+        $(document).ready(function(){
+            $('.tooltipped').tooltip();
         });
 
         var csrftoken = Cookies.get('csrftoken');

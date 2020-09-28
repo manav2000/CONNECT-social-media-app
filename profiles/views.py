@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden, JsonRespons
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 
-from .models import Profile, Relationship
+from profiles.models import Profile, Relationship
 from posts.models import Post, Comment, Like, Saved
 from .forms import ProfileUpdateForm
 from posts.forms import PostForm, CommentForm
@@ -43,6 +43,7 @@ def user_profile_detail_view(request, slug):
     my_request_profiles = [i.receiver for i in requests_by_me]
 
     posts = curr_user_profile.post_set.all()
+    saved_posts = Profile.objects.get_saved_posts(auth_user_profile, Post)
 
     form = CommentForm()
 
@@ -56,6 +57,15 @@ def user_profile_detail_view(request, slug):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(saved_posts, 5)
+    try:
+        saved_posts = paginator.page(page)
+    except PageNotAnInteger:
+        saved_posts = paginator.page(1)
+    except EmptyPage:
+        saved_posts = paginator.page(paginator.num_pages)
+
     context_data = {
         'curr_user_profile': curr_user_profile,
         'total_followings': total_followings,
@@ -68,7 +78,8 @@ def user_profile_detail_view(request, slug):
         'auth_user_following_profiles': auth_user_following_profiles,
         'auth_user_follower_profiles': auth_user_follower_profiles,
         'my_request_profiles': my_request_profiles,
-        'posts': posts
+        'posts': posts,
+        'saved_posts': saved_posts
     }
 
     # form for creating posts
