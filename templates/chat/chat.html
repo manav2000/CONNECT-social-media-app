@@ -85,6 +85,8 @@
         div.append(p)
         ul.append(div);
         updateScroll();
+        var audio = new Audio('{% static 'audio/receive.wav' %}');
+        audio.play();
     }
 
     ws.onclose = (e) => {
@@ -99,6 +101,8 @@
                 'message': message
             }));
             messageInputDom.value = '';
+            var audio = new Audio('{% static 'audio/sent.wav' %}');
+            audio.play();
         };
 
 {% endblock domready %}

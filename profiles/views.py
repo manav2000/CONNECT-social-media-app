@@ -45,7 +45,7 @@ def user_profile_detail_view(request, slug):
     posts = curr_user_profile.post_set.all()
     saved_posts = Profile.objects.get_saved_posts(auth_user_profile, Post)
 
-    form = CommentForm()
+    # form = CommentForm()
 
     # pagination
     page = request.GET.get('page', 1)
@@ -79,7 +79,7 @@ def user_profile_detail_view(request, slug):
         'auth_user_follower_profiles': auth_user_follower_profiles,
         'my_request_profiles': my_request_profiles,
         'posts': posts,
-        'saved_posts': saved_posts
+        'saved_posts': saved_posts,
     }
 
     # form for creating posts
