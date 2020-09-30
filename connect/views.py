@@ -12,6 +12,8 @@ from posts.forms import CommentForm
 from profiles.models import Profile, Relationship
 from posts.models import Post, Comment
 
+from .decorators import unauthenticated_user
+
 
 @login_required
 def profile_search_view(request):
@@ -43,6 +45,7 @@ def notifications(request):
     })
 
 
+@unauthenticated_user
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -72,6 +75,7 @@ def user_login(request):
     })
 
 
+@unauthenticated_user
 def user_signup(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
