@@ -1,4 +1,5 @@
 /.vscode
 __pycache__/
-media
+__pycache__
+/media
 /env
