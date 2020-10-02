@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'posts',
     'chat',
 
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -133,14 +134,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 AUTHENTICATION_BACKENDS = [
@@ -162,3 +163,25 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# AWS CONFIG
+AWS_ACCESS_KEY_ID = 'AKIAWNBYL4H3G4P75M5K'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'manav-connect-bucket'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_REGION_NAME = "ap-south-1"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+# s3 static settings
+STATIC_LOCATION = 'static'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+STATICFILES_STORAGE = 'connect.storage_backends.StaticStorage'
+# s3 public media settings
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'connect.storage_backends.PublicMediaStorage'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]

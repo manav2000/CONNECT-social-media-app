@@ -4,6 +4,8 @@ from profiles.models import Profile
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
+from connect.storage_backends import PublicMediaStorage
+
 # Create your models here.
 
 
@@ -15,8 +17,7 @@ class Post(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True)
     text_content = models.TextField(blank=True)
-    image = models.ImageField(
-        upload_to=f"posts/", blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to='posts/')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

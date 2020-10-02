@@ -5,6 +5,9 @@ from django.urls import reverse
 from django.db.models import Q
 
 
+from connect.storage_backends import PublicMediaStorage
+
+
 # Create your models here.
 
 GENDER = (
@@ -35,7 +38,8 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     gender = models.CharField(choices=GENDER, blank=True, max_length=25)
     country = models.CharField(max_length=255, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(
+        upload_to='avatars/', null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

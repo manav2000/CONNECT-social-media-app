@@ -8,6 +8,9 @@ from profiles.models import Profile, Relationship
 from posts.models import Post, Comment, Like, Saved
 from .forms import ProfileUpdateForm
 from posts.forms import PostForm, CommentForm
+from connect.storage_backends import PublicMediaStorage
+
+import os
 
 # Create your views here.
 
@@ -85,11 +88,12 @@ def user_profile_detail_view(request, slug):
     # form for creating posts
     if auth_user_profile == curr_user_profile:
         if request.method == 'POST':
-            form = PostForm(request.POST or None, request.FILES or None)
+            form = PostForm(request.POST, request.FILES)
             if form.is_valid():
                 new_post = form.save(commit=False)
                 new_post.user = auth_user_profile
                 new_post.save()
+                print(new_post.image.url)
                 return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': auth_user_profile.slug}))
         else:
             form = PostForm()
