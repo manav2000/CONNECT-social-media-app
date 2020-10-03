@@ -172,7 +172,7 @@
 
                     var com_user_div = document.createElement('div');
                     com_user_div.setAttribute('class', 'comment-user');
-                    com_user_div.setAttribute('style', `background-image:url(${avatar_url?avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;`);
+                    com_user_div.setAttribute('style', `background-image:url(${avatar_url?"https://manav-connect-bucket.s3.amazonaws.com/media/"+avatar_url:"{% static 'images/user.png' %}"}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;`);
 
                     com_div.append(com_user_div);
 
