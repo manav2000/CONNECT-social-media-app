@@ -42,7 +42,7 @@
 
 {% block domready %}
 
-    const URL = 'ws://'+ window.location.host + window.location.pathname;
+    const URL = 'wss://'+ window.location.host + window.location.pathname;
     console.log(URL);
 
     const ws = new WebSocket(URL);
