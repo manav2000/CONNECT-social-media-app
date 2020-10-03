@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
-# 'u^iqfh^b)9y9a32r(=c=a^4z$t1np8*4^h)yv*d==i6yj7@_et'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['DEBUG']
 
 ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1', 'localhost']
 
@@ -169,9 +168,7 @@ CHANNEL_LAYERS = {
 
 # AWS CONFIG
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-# 'AKIAWNBYL4H3G4P75M5K'
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-# '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'
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
