@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u^iqfh^b)9y9a32r(=c=a^4z$t1np8*4^h)yv*d==i6yj7@_et'
+SECRET_KEY = os.environ['SECRET_KEY']
+# 'u^iqfh^b)9y9a32r(=c=a^4z$t1np8*4^h)yv*d==i6yj7@_et'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -97,7 +99,8 @@ DATABASES = {
     }
 }
 
-
+DATABASES['default'] = dj_database_url.config(
+    conn_max_age=600, ssl_require=True)
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -159,15 +162,17 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("192.168.99.100", 6379)],
+            "hosts": [os.environ['REDIS_URL']],
         },
     },
 }
 
 # AWS CONFIG
-AWS_ACCESS_KEY_ID = 'AKIAWNBYL4H3G4P75M5K'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'manav-connect-bucket'
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+# 'AKIAWNBYL4H3G4P75M5K'
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+# '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'
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = "ap-south-1"
