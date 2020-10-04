@@ -169,6 +169,11 @@ nav {
         color: rgba(255, 255, 255, 0.8) !important;
     }
 
+    .user-info #username {
+        font-size: 26px !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
     .comment-form button span {
         display: none !important;
     }
@@ -178,7 +183,7 @@ nav {
     }
 
     .delete {
-        transform: translateX(40px) !important;
+        transform: translateX(30px) !important;
         cursor: pointer !important;
     }
 }
