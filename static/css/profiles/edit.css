@@ -25,3 +25,5 @@ form>p select {
 .edit-form>label {
     color: #26a69a !important;
 }
+
+@media screen and (max-width: 600px) {}

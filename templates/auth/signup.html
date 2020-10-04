@@ -8,43 +8,45 @@
 {% block body_profile %}
     {% include 'messages.html' %}
     <div class="row" id="form-container">
-        <div>
+        <div class="col s12 m6">
             <h1>Let's CONNECT.</h1>
         </div>
-        <form class="col s6" method="POST">
-            {% csrf_token %}
-            <div class="row">
-                <div class="input-field col s12">
-                    <label for="id_username">Username</label>
-                    <input id="id_username" type="text" name="username" required>
-                    <span style="color:red;">{{ form.username.errors }}</span>
+        <div class="col s12 m6">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <label for="id_username">Username</label>
+                        <input id="id_username" type="text" name="username" required>
+                        <span style="color:red;">{{ form.username.errors }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <label for="id_email">Email</label>
-                    <input id="id_email" type="text" name="email" required>
-                    <span style="color:red;">{{ form.email.errors }}</span>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <label for="id_email">Email</label>
+                        <input id="id_email" type="text" name="email" required>
+                        <span style="color:red;">{{ form.email.errors }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <label for="id_password">Password</label>
-                    <input id="id_password" type="password" name="password">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <label for="id_password">Password</label>
+                        <input id="id_password" type="password" name="password">
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <label for="id_password2">Conf. Password</label>
-                    <input id="id_password2" type="password" name="password2">
-                    <span style="color:red;">{{ form.password2.errors }}</span>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <label for="id_password2">Conf. Password</label>
+                        <input id="id_password2" type="password" name="password2">
+                        <span style="color:red;">{{ form.password2.errors }}</span>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <button style="float:right" class="btn waves-effect waves-light" type="submit" name="action">SIGN-UP
-                    <i class="material-icons right">send</i>
-                </button>
-            </div>
-        </form>
+                <div class="row">
+                    <button style="float:right" class="btn waves-effect waves-light" type="submit" name="action">SIGN-UP
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock body_profile %}

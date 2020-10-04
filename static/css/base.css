@@ -18,9 +18,9 @@ nav {
 }
 
 .nav-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
 }
 
 .nav__option_3 ul>li {
@@ -86,6 +86,11 @@ nav {
     color: rgba(255, 255, 255, 0.6) !important;
 }
 
+.delete {
+    transform: translateX(150px);
+    cursor: pointer;
+}
+
 .card-content {
     font-size: 22px;
     font-weight: 450;
@@ -148,4 +153,32 @@ nav {
     background: transparent;
     border: none;
     float: right;
+}
+
+@media screen and (max-width: 600px) {
+    .nav-wrapper {
+        display: block !important;
+    }
+
+    .sidenav {
+        width: 80% !important;
+        background-color: #242526 !important;
+    }
+
+    .sidenav li>a {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .comment-form button span {
+        display: none !important;
+    }
+
+    .comment-form button i {
+        margin-left: 0px !important;
+    }
+
+    .delete {
+        transform: translateX(40px) !important;
+        cursor: pointer !important;
+    }
 }

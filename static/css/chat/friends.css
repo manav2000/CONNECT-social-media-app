@@ -3,9 +3,25 @@
     align-items: center;
 }
 
+.friend_div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 10px;
+}
+
 .friend .avatar {
     height: 50px;
     width: 50px;
     background-size: cover;
     border-radius: 50%;
+}
+
+@media screen and (max-width: 600px) {
+    .friend_div {
+        width: 95% !important;
+    }
 }

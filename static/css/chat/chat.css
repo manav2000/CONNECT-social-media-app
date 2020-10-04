@@ -41,3 +41,5 @@
     border-top-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
+
+@media (max-width: 600px) {}

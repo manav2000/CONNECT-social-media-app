@@ -22,25 +22,36 @@
     </ul>
     <nav>
         <div class="nav-wrapper">
-            <div class="nav__option_1">
+            <div>
                 <a href="/" class="brand-logo">CONNECT</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             </div>
-            <div class="nav__option_3">
-                <ul class="right hide-on-med-and-down" style="display: flex; align-items:center;">
-                    <li class="tooltipped" data-position="bottom" data-tooltip="Home"><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt"></i></a></li>
-                    <li class="tooltipped" data-position="bottom" data-tooltip="Search"><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
-                    <li class="tooltipped" data-position="bottom" data-tooltip="Chat"><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow"></i></a></li>
-                    <li class="tooltipped" data-position="bottom" data-tooltip="Notifications"><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
-                    <!-- Dropdown Trigger -->
-                    {% if user_profile.avatar %}
-                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><p class="avatar" style="background-image:url({{user_profile.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;"></p></a></li>
-                    {% else %}
-                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="fas fa-user-circle"></i></a></li>
-                    {% endif %}
-                </ul>
-            </div>
+            <ul class="right hide-on-med-and-down">
+                <li class="tooltipped" data-position="bottom" data-tooltip="Home"><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt"></i></a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Search"><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Chat"><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow"></i></a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Notifications"><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
+                {% if user_profile.avatar %}
+                    <li style="margin-top:17px;"><a class="dropdown-trigger" href="#!" data-target="dropdown1"><p class="avatar" style="background-image:url({{user_profile.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;"></p></a></li>
+                {% else %}
+                    <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i class="fas fa-user-circle"></i></a></li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
+
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt" style="color:#26a69a"></i> Home</a></li>
+        <li><a href="{% url 'profile_search' %}"><i class="fas fa-search" style="color:#26a69a"></i> Search</a></li>
+        <li><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow" style="color:#26a69a"></i> Chat</a></li>
+        <li><a href="{% url 'notifications' %}"><i class="fas fa-bell" style="color:#26a69a"></i> Notifications</a></li>
+        {% if user_profile.avatar %}
+            <li style="margin-left:-8px;"><a href="{% url 'profiles:profile-detail-view' user_profile.slug %}" style="display:flex;align-items:center;"><p class="avatar_in_mob_view" style="background-image:url({{user_profile.avatar.url}}); height: 30px !important;width: 30px !important;background-size: cover;border-radius: 50%;"></p> <span style="padding-left:34px;">Profile</span></a></li>
+        {% else %}
+            <li style="margin-left:-4px;"><a href="{% url 'profiles:profile-detail-view' user_profile.slug %}" style="display:flex;align-items:center;"><i class="fas fa-user-circle" style="font-size:20px;color:#26a69a;"></i> <span style="padding-left:8px;">Profile</span></a></li>
+        {% endif %}
+        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt" style="color:#26a69a"></i>  Logout</a></li>
+    </ul>
     {% endif %}
 
     {% block body_profile %}
@@ -67,6 +78,7 @@
 
         $(document).ready(function(){
             $('.tabs').tabs();
+            $('.sidenav').sidenav();
         });
 
         $(document).ready(function(){

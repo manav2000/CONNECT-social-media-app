@@ -2,7 +2,7 @@
 
 {% for post in posts %}
     <div class="row post infinite-item" id="{{post.id}}">
-        <div class="col m8 offset-m2">
+        <div class="col m8 s12 offset-m2">
             <div class="card">
                 <div class="user-info">
                     {% if post.user.avatar %}
@@ -19,7 +19,7 @@
                     </div>
                     {% if section != 'save' %}
                         {% if curr_user_profile == user_profile %}
-                        <a onclick="delete_func(this)" data-id="{{ post.id }}" class="delete" style="transform:translateX(150px);cursor:pointer;"><i class="fas fa-trash"></i></a>
+                        <a onclick="delete_func(this)" data-id="{{ post.id }}" class="delete tooltipped" data-position="bottom" data-tooltip="delete post"><i class="fas fa-trash"></i></a>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -83,8 +83,8 @@
                     <form onsubmit="comment_func(event)" class="comment-form" style="display:flex;flex-direction:row;align-items:center;" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{post.id}}>
-                        <input type="text" name="text" maxlength="255" id="id_text" style="color: white;flex:5;" placeholder="comment....">
-                        <button class="btn waves-effect waves-light" type="submit" name="action" style="flex:1">Send
+                        <input type="text" name="text" maxlength="255" id="id_text" style="color: white;" placeholder="comment....">
+                        <button class="btn waves-effect waves-light" type="submit" name="action"><span>Send</span>
                             <i class="material-icons right">send</i>
                         </button>
                     </form>
