@@ -85,10 +85,10 @@
         div.append(p)
         ul.append(div);
         updateScroll();
-        {% if me != username %}
+        if (me != username) {
             var audio = new Audio('{% static 'audio/receive.wav' %}');
             audio.play();
-        {% endif %}
+        }
     }
 
     ws.onclose = (e) => {
