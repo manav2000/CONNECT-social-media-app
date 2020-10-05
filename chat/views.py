@@ -3,10 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth import get_user_model
 from django.shortcuts import Http404
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from chat.models import Thread, Message
 from profiles.models import Profile, Relationship
 from django.contrib.auth.models import User
+
+from .mixins import FriendRequiredMixin
 
 # Create your views here.
 
@@ -23,7 +26,7 @@ def friends_list_to_chat(request):
     })
 
 
-class ThreadView(View):
+class ThreadView(LoginRequiredMixin, FriendRequiredMixin, View):
     template_name = 'chat/chat.html'
 
     def get_queryset(self):
