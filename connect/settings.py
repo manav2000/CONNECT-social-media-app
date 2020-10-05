@@ -153,7 +153,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login/'
+LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
 
