@@ -10,7 +10,7 @@
 {% endif %}
 
 <script>
-    $('.close').click(function(e) {
+    document.querySelector('.close').addEventListener('click', function(e) {
         var target = e.target;
         target.parentNode.parentNode.remove();
     });

@@ -17,10 +17,7 @@ from .mixins import FriendRequiredMixin
 @login_required
 def friends_list_to_chat(request):
     user = Profile.objects.get(user=request.user)
-    followers = Relationship.objects.get_all_followers(user)
-    followings = Relationship.objects.get_all_following(user)
-    friends = list(set([following.receiver for following in followings] +
-                       [follower.sender for follower in followers]))
+    friends = Relationship.objects.get_all_friends(user)
     return render(request, 'chat/friends.html', {
         'friends': friends,
     })

@@ -24,10 +24,7 @@ class ProfileManager(models.Manager):
 
     def get_saved_posts(self, me, post_class):
         saved_posts_ids = [post.object_id for post in me.saved_set.all()]
-        saved_posts = []
-        for post in post_class.objects.all():
-            if post.id in saved_posts_ids:
-                saved_posts.append(post)
+        saved_posts = post_class.objects.filter(id__in=saved_posts_ids)
         return saved_posts
 
 
@@ -69,22 +66,25 @@ STATUS_CHOICES = (
 
 
 class RelationshipManager(models.Manager):
-    def get_all_follow_requests(self, receiver):
-        return Relationship.objects.filter(receiver=receiver, status='send')
-
     def get_all_request_by_me(self, me):
-        return Relationship.objects.filter(sender=me, status='send')
+        return Relationship.objects.filter(sender=me, status='send').only('receiver')
 
     def get_all_followers(self, receiver):
-        return Relationship.objects.filter(receiver=receiver, status='accepted')
+        return Relationship.objects.filter(receiver=receiver, status='accepted').only('sender')
 
     def get_all_following(self, sender):
-        return Relationship.objects.filter(sender=sender, status='accepted')
+        return Relationship.objects.filter(sender=sender, status='accepted').only('receiver')
 
     def get_all_friends(self, me):
-        friends_to_chat = Relationship.objects.filter(
-            Q(sender=me) & Q(status='accepted'))
-        return [friend.receiver for friend in friends_to_chat]
+        all_friends = Relationship.objects.filter(
+            (Q(sender=me) | Q(receiver=me)) & Q(status='accepted')).only('sender', 'receiver')
+        friends_profiles = []
+        for friend in all_friends:
+            if friend.sender == me:
+                friends_profiles.append(friend.receiver)
+            else:
+                friends_profiles.append(friend.sender)
+        return list(set(friends_profiles))
 
 
 class Relationship(models.Model):

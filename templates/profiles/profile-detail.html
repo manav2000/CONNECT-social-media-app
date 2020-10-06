@@ -41,8 +41,8 @@
                 </div>
                 <div class="row__2">
                     <p>{{curr_user_profile.post_set.all.count}} post{{curr_user_profile.post_set.all.count|pluralize}}</p>
-                    <a class="modal-trigger" data-target="modal1">{{ total_followers }} follower{{ total_followers|pluralize}}</a>
-                    <a class="modal-trigger" data-target="modal2">{{ total_followings }} following{{ total_followings|pluralize }}</a>
+                    <a class="modal-trigger" data-target="modal1">{{ followers.count }} follower{{ followers.count|pluralize}}</a>
+                    <a class="modal-trigger" data-target="modal2">{{ followings.count }} following{{ followings.count|pluralize }}</a>
                 </div>
                 <div class="row__3">
                     <p class="fullname" style="font-size:20px;font-weight:500px;">{{curr_user_profile.first_name}} {{curr_user_profile.last_name}}</p>

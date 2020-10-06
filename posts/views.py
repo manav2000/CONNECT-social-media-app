@@ -13,15 +13,11 @@ from .forms import PostForm, CommentForm
 
 @login_required
 def home_view(request):
-    admin = User.objects.get(is_superuser=True)
-    admin_prof = Profile.objects.get(user=admin)
+    admin_prof = Profile.objects.get(user__is_superuser=True)
 
     user = Profile.objects.get(user=request.user)
 
-    followers = Relationship.objects.get_all_followers(user)
-    followings = Relationship.objects.get_all_following(user)
-    friends = list(set([following.receiver for following in followings] +
-                       [follower.sender for follower in followers]))
+    friends = Relationship.objects.get_all_friends(user)
     friends = friends + [user]
 
     if admin_prof not in friends:

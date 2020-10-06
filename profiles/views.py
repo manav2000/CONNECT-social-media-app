@@ -35,9 +35,6 @@ def user_profile_detail_view(request, slug):
     followers = Relationship.objects.get_all_followers(
         curr_user_profile)
 
-    total_followings = followings.count()
-    total_followers = followers.count()
-
     following_profiles = [following.receiver for following in followings]
     follower_profiles = [follower.sender for follower in followers]
 
@@ -71,13 +68,13 @@ def user_profile_detail_view(request, slug):
 
     context_data = {
         'curr_user_profile': curr_user_profile,
-        'total_followings': total_followings,
-        'total_followers': total_followers,
         'followings': followings,
         'followers': followers,
         'following_profiles': following_profiles,
         'follower_profiles': follower_profiles,
         'auth_user_profile': auth_user_profile,
+        'auth_user_following': auth_user_following,
+        'auth_user_follower': auth_user_follower,
         'auth_user_following_profiles': auth_user_following_profiles,
         'auth_user_follower_profiles': auth_user_follower_profiles,
         'my_request_profiles': my_request_profiles,
@@ -93,7 +90,6 @@ def user_profile_detail_view(request, slug):
                 new_post = form.save(commit=False)
                 new_post.user = auth_user_profile
                 new_post.save()
-                print(new_post.image.url)
                 return HttpResponseRedirect(reverse('profiles:profile-detail-view', kwargs={'slug': auth_user_profile.slug}))
         else:
             form = PostForm()

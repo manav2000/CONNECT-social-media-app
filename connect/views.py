@@ -37,9 +37,8 @@ def profile_search_view(request):
 
 @login_required
 def notifications(request):
-    auth_user_profile = Profile.objects.get(user=request.user)
-    follow_requests = Relationship.objects.get_all_follow_requests(
-        auth_user_profile)
+    follow_requests = Relationship.objects.filter(
+        receiver__user=request.user, status='send')
     return render(request, 'notifications.html', {
         'follow_requests': follow_requests
     })
