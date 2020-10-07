@@ -10,6 +10,9 @@ def user_profile_context(request):
 
 
 def total_noti(request):
-    follow_requests = Relationship.objects.filter(
-        receiver__user=request.user, status='send').count()
-    return {'follow_requests': follow_requests}
+    try:
+        follow_requests = Relationship.objects.filter(
+            receiver__user=request.user, status='send').count()
+        return {'follow_requests': follow_requests}
+    except:
+        return {}
