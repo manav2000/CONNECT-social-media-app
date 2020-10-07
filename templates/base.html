@@ -30,7 +30,7 @@
                 <li class="tooltipped" data-position="bottom" data-tooltip="Home"><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt"></i></a></li>
                 <li class="tooltipped" data-position="bottom" data-tooltip="Search"><a href="{% url 'profile_search' %}"><i class="fas fa-search"></i></a></li>
                 <li class="tooltipped" data-position="bottom" data-tooltip="Chat"><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow"></i></a></li>
-                <li class="tooltipped" data-position="bottom" data-tooltip="Notifications"><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i></a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Notifications"><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i><span style="background:red;border-radius:50%;">{% if total_noti %}{{total_noti}}{% endif %}</span></a></li>
                 {% if user_profile.avatar %}
                     <li style="margin-top:17px;"><a class="dropdown-trigger" href="#!" data-target="dropdown1"><p class="avatar" style="background-image:url({{user_profile.avatar.url}}); height: 30px;width: 30px;background-size: cover;border-radius: 50%;"></p></a></li>
                 {% else %}
@@ -44,7 +44,7 @@
         <li><a href="{% url 'posts:home' %}"><i class="fas fa-home-alt" style="color:#26a69a"></i> Home</a></li>
         <li><a href="{% url 'profile_search' %}"><i class="fas fa-search" style="color:#26a69a"></i> Search</a></li>
         <li><a href="{% url 'chat:friends-list' %}"><i class="fas fa-location-arrow" style="color:#26a69a"></i> Chat</a></li>
-        <li><a href="{% url 'notifications' %}"><i class="fas fa-bell" style="color:#26a69a"></i> Notifications</a></li>
+        <li><a href="{% url 'notifications' %}"><i class="fas fa-bell" style="color:#26a69a"></i><span>{% if total_noti %}{{total_noti}}{% endif %}</span> Notifications</a></li>
         {% if user_profile.avatar %}
             <li style="margin-left:-8px;"><a href="{% url 'profiles:profile-detail-view' user_profile.slug %}" style="display:flex;align-items:center;"><p class="avatar_in_mob_view" style="background-image:url({{user_profile.avatar.url}}); height: 30px !important;width: 30px !important;background-size: cover;border-radius: 50%;"></p> <span style="padding-left:34px;">Profile</span></a></li>
         {% else %}

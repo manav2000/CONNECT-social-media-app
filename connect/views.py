@@ -6,7 +6,7 @@ from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .forms import LoginForm, UserRegistrationForm, SearchProfileForm
+from .forms import LoginForm, UserRegistrationForm, SearchProfileForm, ResetPassword
 from posts.forms import CommentForm
 
 from profiles.models import Profile, Relationship
@@ -90,6 +90,27 @@ def user_signup(request):
     return render(request, 'auth/signup.html', {
         'form': form
     })
+
+
+@unauthenticated_user
+def reset_password(request):
+    if request.method == 'POST':
+        form = ResetPassword(data=request.POST)
+
+        if(form.is_valid()):
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = User.objects.get(username=username)
+            user.set_password(password)
+            user.save()
+            messages.success(request, "PASSWORD RESET WAS SUCCESSFULL")
+            return HttpResponseRedirect(reverse('login'))
+
+    else:
+        form = ResetPassword()
+
+    return render(request, 'auth/reset_pwd.html', {'form': form})
 
 
 @login_required

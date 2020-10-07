@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'connect.context_processors.user_profile_context',
+                'connect.context_processors.total_noti',
             ],
         },
     },

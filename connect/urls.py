@@ -17,15 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import user_login, user_signup, user_logout, notifications, profile_search_view
+from .views import user_login, user_signup, user_logout, notifications, profile_search_view, reset_password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', home_view, name="home"),
     path('notifications/', notifications, name="notifications"),
     path('search/', profile_search_view, name="profile_search"),
     path('login/', user_login, name="login"),
     path('signup/', user_signup, name="signup"),
+    path('reset_pwd/', reset_password, name="reset_pwd"),
     path('logout/', user_logout, name="logout"),
     path('profiles/', include('profiles.urls')),
     path('', include('posts.urls')),
