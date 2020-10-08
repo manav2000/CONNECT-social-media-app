@@ -36,3 +36,11 @@ class Message(TrackingModel):
 
     def __str__(self) -> str:
         return f'From <Thread - {self.thread}>'
+
+
+class UserStatus(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    online = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} is {self.online}"
